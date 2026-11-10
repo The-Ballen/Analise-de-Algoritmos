@@ -1,0 +1,134 @@
+% !TeX root = ../main.tex
+
+% ----------------------------------------------------------
+% Capítulo 1 (Integrante 1)
+% ----------------------------------------------------------
+\chapter{Problema do Caixeiro-Viajante e Algoritmos Gulosos}
+
+\section{Conceito, Definição e Representação do Problema do Caixeiro-Viajante}
+
+O \textbf{Problema do Caixeiro-Viajante} (\textit{Traveling Salesman Problem} -- TSP) é um dos problemas mais clássicos da Ciência da Computação e da Otimização Combinatória.
+
+\subsection{Representação por Meio de Grafos e Distâncias entre Cidades}
+
+Para que um sistema computacional possa processar e resolver esse problema, é necessário modelá-lo matematicamente por meio da Teoria dos Grafos, estruturando um grafo ponderado $G = (V, E)$. As informações essenciais incluem:
+
+\begin{itemize}
+    \item \textbf{Conjunto de localidades (Vértices $V$):} A lista exata das cidades que devem ser visitadas, bem como a definição clara de qual delas atua como ponto de partida (e de retorno, caso o veículo precise voltar ao centro de distribuição de origem).
+    \item \textbf{Conexões viárias (Arestas $E$):} O mapeamento das estradas ou rotas diretas que interligam cada par de cidades, indicando se o grafo é completo (todas as cidades se conectam entre si) ou se existem restrições de acesso.
+    \item \textbf{Matriz de distâncias ou custos (Pesos $w$):} O valor numérico correspondente à distância física (em quilômetros) entre cada par de cidades $(u, v)$. Em cenários logísticos reais, essa matriz pode ser assimétrica (grafo direcionado), visto que a distância de $A$ para $B$ pode divergir da distância de $B$ para $A$ em razão de vias de mão única, desvios ou topografia.
+    \item \textbf{Restrições operacionais adicionais:} Dados de regras de negócio, tais como a obrigatoriedade de visitar cada cidade exatamente uma única vez (formando um ciclo hamiltoniano) e eventuais bloqueios de tráfego ou limites de peso nas rodovias.
+\end{itemize}
+
+\subsection{A Dificuldade Computacional de Encontrar a Rota Ótima}
+
+Encontrar a melhor rota garantida (solução ótima global) é uma tarefa computacionalmente árdua devido ao fenômeno conhecido como \textbf{explosão combinatória}. Na teoria da complexidade computacional, a versão de otimização do Problema do Caixeiro-Viajante pertence à classe dos problemas \textbf{NP-difíceis} (\textit{NP-hard}), o que significa que não se conhece nenhum algoritmo capaz de resolvê-lo de forma exata em tempo polinomial para qualquer instância.
+
+Se um computador tentar solucionar o problema por força bruta (busca exaustiva), avaliando todas as permutações possíveis para identificar a menor distância, o número de rotas distintas para $n$ cidades (fixando-se a cidade inicial e assumindo distâncias simétricas entre ida e volta) é dado pela expressão matemática:
+
+\begin{equation}
+    R = \frac{(n - 1)!}{2}
+\end{equation}
+
+Aplicando essa fórmula para um cenário ilustrativo de $n = 20$ cidades de uma empresa de entregas, temos:
+
+\begin{equation}
+    R = \frac{(20 - 1)!}{2} = \frac{19!}{2} = \frac{121.645.100.408.832.000}{2} = 60.822.550.204.416.000\text{ rotas}
+\end{equation}
+
+Existem mais de \textbf{60,8 quatrilhões} de rotas possíveis (ou cerca de $1,21 \times 10^{17}$ caso as distâncias de ida e volta sejam diferentes). Mesmo que um processador moderno conseguisse avaliar 1 bilhão ($10^9$) de rotas completas por segundo, ele levaria cerca de $60.822.550$ segundos --- o que equivale a aproximadamente \textbf{704 dias} (quase dois anos de processamento ininterrupto) --- apenas para testar todas as possibilidades de uma única entrega de 20 cidades. Embora técnicas avançadas de programação dinâmica (como o algoritmo de Held-Karp, de complexidade $O(n^2 \cdot 2^n)$) consigam resolver 20 cidades em frações de segundo, basta aumentar a escala logística para 60 ou 100 pontos de entrega para que até os algoritmos exatos mais sofisticados se tornem inviáveis em tempo hábil.
+
+\section{Introdução às Estratégias Heurísticas}
+
+Diante da barreira de processamento imposta pelos problemas de natureza exponencial e fatorial (como os pertencentes à classe NP-difícil), a Ciência da Computação e a Pesquisa Operacional recorrem a métodos alternativos aos algoritmos exatos. Entre as abordagens mais difundidas na prática estão os métodos heurísticos.
+
+\subsection{Definição de Heurística na Computação}
+
+Etimologicamente, o termo \textit{heurística} deriva do verbo grego \textit{heuriskein}, que significa ``descobrir'' ou ``encontrar''. Na resolução de problemas computacionais, uma heurística é uma técnica, estratégia ou conjunto de regras práticas (\textit{rules of thumb}) projetadas para guiar a busca por uma solução viável dentro de um espaço de estados muito vasto, utilizando conhecimento específico do domínio do problema ou critérios intuitivos de decisão.
+
+Ao contrário de um algoritmo exato (que explora sistematicamente o espaço de busca até comprovar matematicamente a otimalidade do resultado), a heurística atua como um ``atalho cognitivo'' ou computacional: ela aplica critérios simplificadores (como escolhas gulosas, podas agressivas na árvore de decisão ou buscas locais por melhoria incremental) para descartar a imensa maioria das combinações possíveis e convergir diretamente para uma resposta promissora.
+
+\subsection{Principal Finalidade de Utilização}
+
+A finalidade primordial de empregar uma heurística é \textbf{viabilizar a obtenção de soluções de boa qualidade em um tempo computacional aceitável (polinomial)} e com baixo consumo de memória, especialmente para problemas complexos ou de larga escala nos quais os métodos exatos falham por exaustão de tempo.
+
+Em termos de projeto de algoritmos, o uso de uma heurística representa uma troca deliberada (\textit{trade-off}) entre \textbf{otimalidade} e \textbf{eficiência (velocidade)}. Quando uma aplicação real exige decisões em tempo real --- como o cálculo de uma rota em um aplicativo de GPS, o escalonamento de pacotes em um roteador de rede ou a movimentação de um agente em um jogo eletrônico ---, a heurística permite entregar uma resposta funcional em milissegundos, contornando a explosão combinatória.
+
+\subsection{Garantia de Otimalidade da Solução}
+
+\textbf{Uma heurística não garante que a solução encontrada será a melhor solução possível (solução ótima global)}. Além disso, em sua definição estrita, uma heurística pura também não oferece uma garantia matemática formal sobre o quão próxima ou distante a solução obtida está do valor ótimo verdadeiro.
+
+Isso ocorre porque, para ganhar velocidade, o método heurístico toma decisões baseadas em informações parciais ou locais (visão míope do problema) e ignora regiões inteiras do espaço de busca. Esse comportamento sujeita o algoritmo a dois fenômenos clássicos:
+
+\begin{enumerate}
+    \item \textbf{Estagnação em Ótimos Locais:} Ao buscar melhorias passo a passo, a heurística pode atingir uma solução que é a melhor dentro de sua vizinhança imediata (um \textit{ótimo local}), mas que é significativamente inferior à melhor solução existente em outra região inexplorada do espaço de estados (o \textit{ótimo global}).
+    \item \textbf{Propagação de Escolhas Iniciais Subótimas:} Em heurísticas construtivas (que montam a solução elemento por elemento), uma decisão que parece altamente vantajosa nas primeiras etapas pode restringir severamente as opções futuras, forçando o algoritmo a aceitar escolhas muito ruins no final do processo.
+\end{enumerate}
+
+\section{Funcionamento de um Algoritmo Guloso Aplicado ao TSP}
+
+Uma das abordagens mais conhecidas na literatura de Otimização Combinatória e Análise de Algoritmos para o TSP é a \textbf{Heurística do Vizinho Mais Próximo} (\textit{Nearest Neighbor Heuristic} -- NNH). Trata-se de uma heurística construtiva clássica baseada no paradigma de \textbf{algoritmos gulosos} (\textit{greedy algorithms}), amplamente empregada para gerar soluções rápidas para o Problema do Caixeiro-Viajante.
+
+\subsection{Etapas da Estratégia}
+
+O algoritmo constrói a rota passo a passo, mantendo um conjunto de vértices (cidades) já visitados e outro de vértices pendentes. O seu funcionamento divide-se em quatro etapas sequenciais:
+
+\begin{enumerate}
+    \item \textbf{Inicialização:} Define-se a cidade de origem $v_0$ como a localização atual do entregador e marca-se $v_0$ como visitada.
+    \item \textbf{Seleção Gulosa:} A partir da cidade atual $u$, o algoritmo inspeciona todas as arestas que conectam $u$ às cidades ainda não visitadas e seleciona a cidade $v$ cujo custo de deslocamento $d(u, v)$ seja o menor possível.
+    \item \textbf{Atualização:} O entregador desloca-se para a cidade $v$, que passa a ser a nova localização atual e é marcada como visitada.
+    \item \textbf{Critério de Parada e Fechamento:} Os passos 2 e 3 são repetidos iterativamente até que todas as $n$ cidades tenham sido visitadas. Por fim, adiciona-se uma última aresta conectando a última cidade visitada de volta ao ponto de partida $v_0$, fechando o ciclo hamiltoniano.
+\end{enumerate}
+
+\subsection{Eficiência Computacional e Limitações da Escolha Gulosa}
+
+A principal vantagem dessa abordagem é a sua \textbf{extrema eficiência computacional e simplicidade de implementação}. Enquanto a busca exaustiva pela rota perfeita exige avaliar $(n-1)!/2$ permutações (complexidade fatorial $O(n!)$), a Heurística do Vizinho Mais Próximo reduz drasticamente o esforço para um \textbf{tempo polinomial quadrático}, de ordem $O(n^2)$.
+
+Isso ocorre porque, na primeira cidade, o algoritmo faz $n-1$ comparações de distância; na segunda, faz $n-2$ comparações, e assim sucessivamente, totalizando:
+
+\begin{equation}
+    C(n) = (n - 1) + (n - 2) + \dots + 1 = \frac{n(n - 1)}{2} \in O(n^2)
+\end{equation}
+
+Na prática, para uma rota com $1.000$ cidades, um computador executa cerca de $500.000$ comparações simples e entrega uma rota completa em poucos milissegundos, sem necessidade de estruturas complexas de memória ou de \textit{backtracking} (retrocesso).
+
+Entretanto, \textbf{essa estratégia não garante que a distância total percorrida será a menor possível}. A justificativa reside na \textbf{natureza míope (localmente ótima)} do critério guloso: em cada etapa, o entregador toma uma decisão olhando exclusivamente para o ganho imediato (a menor aresta disponível naquele instante), ignorando completamente a topologia global do mapa e as consequências futuras dessa escolha. Ao não prever o que acontecerá no restante do percurso, o algoritmo frequentemente deixa cidades geograficamente isoladas (ou em extremos opostos do mapa) ``esquecidas'' para o final. Quando restam poucas opções, o entregador torna-se obrigado a percorrer arestas extremamente longas para visitar essas cidades remanescentes e retornar à base, anulando toda a economia obtida nos passos iniciais.
+
+\section{Exemplo Prático com Quatro Cidades}
+
+Para ilustrar o funcionamento passo a passo e as limitações dessa estratégia, considere um entregador que parte da matriz na cidade \textbf{A} e precisa atender às cidades \textbf{B}, \textbf{C} e \textbf{D}, retornando a \textbf{A} no final. As distâncias em quilômetros entre as quatro localidades estão dispostas na matriz simétrica apresentada na \autoref{tab:matriz_tsp_4cidades}:
+
+\begin{table}[htb]
+\centering
+\caption{\label{tab:matriz_tsp_4cidades}Matriz de distâncias (em km) para o cenário de quatro cidades.}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{gray!20}
+\textbf{De / Para} & \textbf{Cidade A} & \textbf{Cidade B} & \textbf{Cidade C} & \textbf{Cidade D} \\ \hline
+\textbf{Cidade A} & $0$ & $10$ & $12$ & $60$ \\ \hline
+\textbf{Cidade B} & $10$ & $0$ & $15$ & $12$ \\ \hline
+\textbf{Cidade C} & $12$ & $15$ & $0$ & $100$ \\ \hline
+\textbf{Cidade D} & $60$ & $12$ & $100$ & $0$ \\ \hline
+\end{tabular}
+\end{table}
+
+Analisando o comportamento da \textbf{Heurística do Vizinho Mais Próximo} em comparação com a \textbf{Rota Ótima}:
+
+\begin{itemize}
+    \item \textbf{Caminho escolhido pela Heurística ($A \rightarrow B \rightarrow D \rightarrow C \rightarrow A$):}
+    \begin{enumerate}
+        \item Partindo de \textbf{A}, as distâncias são: $B=10$, $C=12$ e $D=60$. O entregador escolhe a mais próxima: \textbf{B} ($10\text{ km}$).
+        \item Estando em \textbf{B}, as não visitadas são $C=15$ e $D=12$. Ele escolhe a mais próxima: \textbf{D} ($12\text{ km}$).
+        \item Estando em \textbf{D}, a única cidade não visitada restante é \textbf{C}. Ele é forçado a ir de \textbf{D} para \textbf{C}, percorrendo uma estrada muito longa de $100\text{ km}$ (a ``armadilha'' deixada para o final).
+        \item De \textbf{C}, ele retorna à origem \textbf{A} ($12\text{ km}$).
+        \item \textbf{Distância Total da Heurística:} $10 + 12 + 100 + 12 = \mathbf{134\text{ km}}$.
+    \end{enumerate}
+    \item \textbf{Caminho da Rota Ótima ($A \rightarrow C \rightarrow B \rightarrow D \rightarrow A$):}
+    \begin{enumerate}
+        \item Se no início o entregador abdicasse do vizinho imediatamente mais próximo ($B=10$) e fosse primeiro para \textbf{C} ($12\text{ km}$), de lá seguiria para \textbf{B} ($15\text{ km}$), depois para \textbf{D} ($12\text{ km}$) e retornaria direto a \textbf{A} ($60\text{ km}$), evitando a aresta crítica de $100\text{ km}$ entre C e D.
+        \item \textbf{Distância Total Ótima:} $12 + 15 + 12 + 60 = \mathbf{99\text{ km}}$.
+    \end{enumerate}
+\end{itemize}
+
+Nesse cenário concreto, a sedução de economizar apenas $2\text{ km}$ no primeiro movimento ($A \rightarrow B$ em vez de $A \rightarrow C$) penalizou o entregador no final da rota, gerando um percurso total $35\text{ km}$ mais longo ($35,3\%$ pior que o ideal). O mesmo fenômeno ocorre quando cidades estão distribuídas ao longo de uma linha reta com distâncias ligeiramente crescentes em lados alternados: o entregador fica fazendo um ``zigue-zague'' cada vez mais amplo de um extremo ao outro, em vez de percorrer um lado inteiro primeiro e o outro na volta.

@@ -1,0 +1,26 @@
+% !TeX root = ../main.tex
+
+% ----------------------------------------------------------
+% Capítulo 6 (Integrante 6)
+% ----------------------------------------------------------
+\chapter{Algoritmos Aproximados para o TSP}
+
+\section{Dificuldades de Encontrar a Solução Ótima para o TSP}
+
+\section{Diferença entre Encontrar uma Solução Viável e uma Solução Ótima}
+
+Em uma operação logística real envolvendo o Problema do Caixeiro-Viajante, \textbf{uma rota viável e suficientemente boa (subótima) atende perfeitamente à necessidade da empresa}, não sendo necessário (e muitas vezes nem desejável) aguardar pela melhor rota absoluta possível (solução ótima). Essa diferença prática entre buscar apenas uma solução viável de boa qualidade e exigir a solução ótima justifica-se por três fatores fundamentais:
+
+\begin{enumerate}
+    \item \textbf{Restrição de tempo de resposta (\textit{Time-to-Decision}):} Uma transportadora precisa despachar seus veículos diariamente logo após o fechamento dos pedidos. É muito mais vantajoso utilizar um método rápido que leva 2 segundos para encontrar uma rota apenas $2\%$ ou $3\%$ mais longa do que a ideal, do que paralisar a frota por horas ou dias aguardando que o servidor calcule uma economia irrisória de poucos quilômetros.
+    \item \textbf{Dinamismo e incerteza do ambiente real:} O mundo físico não é estático. A ``rota matematicamente perfeita'' calculada no escritório pode rapidamente se tornar a pior opção na prática devido a variáveis imprevisíveis, como acidentes de trânsito, congestionamentos repentinos, condições climáticas adversas, obras na pista ou atrasos no recebimento da mercadoria pelo cliente.
+    \item \textbf{Retorno financeiro decrescente:} O custo computacional e de infraestrutura de TI (energia elétrica, servidores de alto desempenho e tempo de processamento) exigido para refinar uma solução de $98\%$ de eficiência para $100\%$ de eficiência frequentemente supera o valor financeiro do combustível que seria economizado naquele pequeno trecho otimizado.
+\end{enumerate}
+
+\section{Apresentação de um Algoritmo Aproximado para o TSP}
+
+\section{Demonstração do Funcionamento do Algoritmo em um Exemplo Pequeno}
+
+\section{Explicação da Garantia de Aproximação Oferecida pelo Método}
+
+\section{Condições Necessárias para a Validade da Garantia (Desigualdade Triangular no TSP Métrico)}

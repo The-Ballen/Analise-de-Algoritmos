@@ -1,0 +1,49 @@
+% !TeX root = ../main.tex
+
+% ----------------------------------------------------------
+% Introdução (capítulo sem numeração, mas presente no Sumário)
+% ----------------------------------------------------------
+\chapter*[Introdução]{Introdução}
+\addcontentsline{toc}{chapter}{Introdução}
+% ----------------------------------------------------------
+
+\section*{Objetivo Geral e Assuntos Abordados}
+
+\section*{Justificativa: Tempo de Processamento e Crescimento Assintótico}
+
+Na Ciência da Computação, a dificuldade de resolver um problema à medida que o volume de dados cresce é explicada pela \textbf{Teoria da Complexidade Computacional} e pela \textbf{Análise Assintótica de Algoritmos}. O fator determinante não é apenas o poder de processamento do \textit{hardware}, mas sim a \textbf{taxa de crescimento} da função matemática $T(n)$ que relaciona o tamanho da entrada ($n$) à quantidade de operações elementares que o algoritmo precisa executar no pior caso.
+
+\subsection*{Algoritmos Polinomiais versus Exponenciais e Fatoriais}
+
+Para compreender por que determinados problemas se tornam intratáveis, divide-se o comportamento assintótico dos algoritmos em duas grandes categorias:
+
+\begin{itemize}
+    \item \textbf{Crescimento Polinomial (Problemas Tratáveis -- Classe P):} Ocorre quando o tempo de execução é limitado superiormente por um polinômio da forma $O(n^k)$, onde $k$ é uma constante positiva (ex.: busca linear $O(n)$, ordenação \textit{MergeSort} $O(n \log n)$ ou matrizes em $O(n^2)$). Nesses casos, o aumento de dados provoca um crescimento previsível e gerenciável no tempo de processamento. Por exemplo, em um algoritmo linear $O(n)$, dobrar o volume de dados apenas dobra o tempo de espera; em um quadrático $O(n^2)$, dobrar a entrada quadruplica o tempo.
+    \item \textbf{Crescimento Superpolinomial, Exponencial ou Fatorial (Problemas Intratáveis em Larga Escala):} Ocorre quando a variável $n$ encontra-se no expoente, como em $O(2^n)$, ou envolve permutações completas, como em $O(n!)$. Nesses problemas (frequentemente pertencentes à classe \textbf{NP-difícil}), a adição de um único novo elemento aos dados de entrada não soma um valor fixo ao tempo de execução, mas sim \textbf{multiplica} todo o esforço computacional anterior.
+\end{itemize}
+
+\subsection*{A Relação Direta com o Tempo de Processamento}
+
+Para um tamanho de entrada muito pequeno (por exemplo, $n = 5$), a diferença prática de tempo entre um algoritmo eficiente de complexidade $O(n^2)$ e um algoritmo exaustivo de complexidade $O(2^n)$ é imperceptível para um ser humano, pois ambos executam em frações de microssegundo ($25$ operações contra $32$ operações). 
+
+Contudo, à medida que $n$ cresce, ocorre uma divergência drástica: o número de estados ou combinações possíveis no espaço de busca aumenta mais rápido do que qualquer capacidade física de processamento. Considere um computador hipotético capaz de realizar \textbf{1 bilhão ($10^9$) de operações por segundo}. A \autoref{tab:crescimento_assintotico} ilustra como o tempo necessário para encontrar uma solução evolui conforme a quantidade de dados ($n$) aumenta em diferentes ordens de complexidade:
+
+\begin{table}[htb]
+\centering
+\caption{\label{tab:crescimento_assintotico}Relação entre o tamanho da entrada ($n$) e o tempo de execução para um processador de $10^9$ operações/segundo.}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\rowcolor{gray!20}
+\textbf{Complexidade} & \textbf{$n = 10$} & \textbf{$n = 20$} & \textbf{$n = 50$} & \textbf{$n = 100$} \\ \hline
+$O(n \log_2 n)$ & $0,03\ \mu\text{s}$ & $0,08\ \mu\text{s}$ & $0,28\ \mu\text{s}$ & $0,66\ \mu\text{s}$ \\ \hline
+$O(n^2)$ & $0,1\ \mu\text{s}$ & $0,4\ \mu\text{s}$ & $2,5\ \mu\text{s}$ & $10\ \mu\text{s}$ \\ \hline
+$O(n^3)$ & $1\ \mu\text{s}$ & $8\ \mu\text{s}$ & $125\ \mu\text{s}$ & $1\ \text{ms}$ \\ \hline
+$O(2^n)$ & $1,02\ \mu\text{s}$ & $1,05\ \text{ms}$ & $13\ \text{dias}$ & $4 \times 10^{13}\ \text{anos}$ \\ \hline
+$O(n!)$ & $3,6\ \text{ms}$ & $77,1\ \text{anos}$ & $> 10^{48}\ \text{anos}$ & Inviável \\ \hline
+\end{tabular}
+\end{table}
+
+Observa-se que, enquanto um algoritmo cúbico $O(n^3)$ resolve uma instância de $n = 100$ elementos em apenas 1 milissegundo, um algoritmo de complexidade exponencial $O(2^n)$ salta de cerca de 1 milissegundo (para $n = 20$) para 13 dias (para $n = 50$) e atinge dezenas de trilhões de anos para $n = 100$ (superando em milhares de vezes a idade estimada do universo). 
+
+Portanto, a dificuldade computacional não decorre de uma limitação tecnológica momentânea dos computadores atuais, mas de uma barreira matemática: em problemas cuja solução exata exige explorar espaços de busca exponenciais ou fatoriais, mesmo que a velocidade dos processadores fosse multiplicada por mil, o ganho prático permitiria aumentar o tamanho da entrada em apenas algumas unidades antes de esbarrar novamente na barreira do tempo impraticável.
