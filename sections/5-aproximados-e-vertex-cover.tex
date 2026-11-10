@@ -1,0 +1,52 @@
+% !TeX root = ../main.tex
+
+% ----------------------------------------------------------
+% Capítulo 5 (Integrante 5)
+% ----------------------------------------------------------
+\chapter{Algoritmos Aproximados e Cobertura de Vértices}
+
+\section{Conceito de Algoritmo Aproximado}
+
+Quando lidamos com problemas de otimização pertencentes à classe NP-difícil, a impossibilidade prática de obter soluções exatas em tempo hábil motivou o desenvolvimento de uma classe rigorosa de métodos conhecida como \textbf{Algoritmos de Aproximação}.
+
+\subsection{Definição de Algoritmo de Aproximação}
+
+Algoritmos de aproximação são métodos computacionais eficientes --- isto é, que executam obrigatoriamente em \textbf{tempo polinomial} --- projetados para resolver problemas de otimização difíceis (geralmente NP-difíceis), nos quais encontrar a solução exata demandaria um tempo de processamento exponencial ou proibitivo. Diferentemente das heurísticas comuns, um algoritmo de aproximação possui uma prova matemática formal que atesta a qualidade da solução gerada para qualquer instância de entrada.
+
+\subsection{Relação com a Busca pela Solução Ótima e Motivação}
+
+A relação fundamenta-se em um compromisso (\textit{trade-off}) rigorosamente controlado: abre-se mão da certeza de alcançar o resultado matematicamente perfeito (a solução ótima global) em troca de velocidade de processamento (tempo polinomial), mas mantém-se o controle estrito sobre a margem de erro máxima por meio de uma \textbf{garantia matemática}. Assim, embora o algoritmo não entregue necessariamente o valor ótimo $OPT$, ele utiliza propriedades estruturais do próprio ótimo (como relaxações lineares ou limites inferiores) para assegurar que a resposta obtida nunca se afaste do ideal além de um fator conhecido.
+
+O principal motivo para utilizar uma solução aproximada reside na barreira da complexidade computacional: achar a solução ótima em problemas NP-difíceis exige explorar espaços de busca que crescem de forma exponencial ou fatorial, tornando o processamento inviável para entradas reais de médio e grande porte. Os algoritmos de aproximação reduzem esse tempo drasticamente para uma escala polinomial, oferecendo a segurança adicional --- inexistente nas heurísticas puras --- de que o sistema jamais produzirá uma solução arbitrariamente ruim, mesmo nos piores cenários de entrada.
+
+\section{Diferença entre Algoritmos Exatos, Heurísticos e Aproximados}
+
+Na Análise de Algoritmos, a distinção fundamental entre os métodos exatos, heurísticos e aproximados reside no compromisso entre o tempo de execução e a garantia matemática de qualidade da solução:
+
+\begin{itemize}
+    \item \textbf{Algoritmos Exatos:} Exploram sistematicamente o espaço de busca até encontrar e comprovar matematicamente a solução ótima global ($C = C^*$). Contudo, para problemas NP-difíceis, exigem tempo exponencial ou fatorial no pior caso, tornando-se inviáveis para instâncias de grande escala.
+    \item \textbf{Algoritmo que apenas procura uma solução boa (Heurística):} Baseia-se na ``intuição'', em regras práticas ou em tentativas empíricas inteligentes para achar uma solução rápida e satisfatória. Contudo, ele \textbf{não oferece garantias formais}: sob uma determinada condição favorável, pode encontrar a solução perfeita; em outra configuração de dados, pode entregar uma solução péssima sem que o usuário tenha meios de perceber o prejuízo.
+    \begin{itemize}
+        \item \textit{Exemplo ilustrativo:} É equivalente a pedir uma recomendação de restaurante para um amigo. Geralmente a refeição será boa e você economizará tempo de pesquisa, mas não existe nenhuma garantia científica ou contratual de que aquele é o melhor custo-benefício da cidade ou de que o prato não virá ruim naquele dia.
+    \end{itemize}
+    \item \textbf{Algoritmo com garantia matemática de qualidade (Algoritmo de Aproximação):} Também busca soluções rápidas em tempo polinomial, mas é construído sobre propriedades matemáticas estritas que provam o quão próxima sua resposta está da solução ótima. O desenvolvedor conhece de antemão o \textbf{pior cenário possível}. Por exemplo, um algoritmo $2$-aproximado para um problema de minimização garante matematicamente que o custo final jamais ultrapassará o dobro do custo da solução ótima ($C \le 2 \cdot C^*$), não importa o quão difícil seja a instância.
+    \begin{itemize}
+        \item \textit{Exemplo ilustrativo:} É equivalente a contratar um serviço de logística expressa com cláusula contratual auditada que garante que, mesmo no pior cenário possível (trânsito intenso ou chuva), sua encomenda será entregue em no máximo 48 horas (sendo o tempo ideal de um voo dedicado igual a 24 horas). O usuário tem uma segurança previsível e um teto máximo de atraso garantido \cite{wikipedia_aprox, miyazawa_aprox, ziviani2011}.
+    \end{itemize}
+\end{itemize}
+
+\section{Conceito de Razão de Aproximação e Interpretação da Qualidade}
+
+Na Análise de Algoritmos, a \textbf{garantia de aproximação} (ou garantia formal de qualidade) é uma prova matemática rigorosa, estabelecida por meio de teoremas, que assegura um limite máximo para o erro de um algoritmo em qualquer cenário possível, independentemente do quão complexa ou atípica seja a entrada de dados.
+
+Em sentido técnico e prático, dizer que uma solução é ``próxima da solução ideal'' significa que o algoritmo encontrou uma resposta viável e satisfatória em um tempo de execução aceitável, cujo custo $C$ está matematicamente limitado a uma pequena fração ou múltiplo do custo da solução ótima verdadeira $C^*$. 
+
+Formalmente, diz-se que um algoritmo possui um \textbf{fator (ou razão) de aproximação} $\alpha$ se, para qualquer instância do problema, o valor da solução entregue difere do valor ótimo por, no máximo, um fator $\alpha$. Por exemplo, em um problema de minimização, uma $\alpha$-aproximação com $\alpha = 1,5$ garante que o custo obtido será, no pior caso, apenas $50\%$ maior que o ideal ($C \le 1,5 \cdot C^*$). Dessa forma, sacrifica-se parcialmente a precisão absoluta para obter o melhor resultado comprovadamente próximo do ótimo sem incorrer em tempos exponenciais.
+
+\subsection{Demonstração por Meio de um Exemplo Simples}
+
+\section{Definição do Problema de Cobertura de Vértices (Vertex Cover)}
+
+\section{Aplicação de um Algoritmo de Aproximação em um Pequeno Grafo}
+
+\section{Explicação da Garantia de Aproximação do Algoritmo Utilizado}

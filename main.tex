@@ -1,0 +1,59 @@
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	twoside,			% para impressão em recto e verso. Oposto a oneside
+	a4paper,			% tamanho do papel. 
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	brazilian			% o último idioma é o principal do documento
+	]{abntex2}
+
+\input{styles/preamble.tex}
+\input{metadata.tex}
+
+\begin{document}
+
+% Seleciona o idioma do documento (conforme pacotes do babel)
+\selectlanguage{brazilian}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing 
+
+% ELEMENTOS PRÉ-TEXTUAIS
+% \pretextual
+
+\imprimircapa
+\imprimirfolhaderosto{}
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ELEMENTOS TEXTUAIS
+\textual
+
+\input{sections/0-introducao.tex}
+
+% --- Parte I ---
+\part{Estratégias de Resolução e Busca}
+\input{sections/1-tsp-e-gulosos.tex}
+\input{sections/2-busca-local.tex}
+\input{sections/3-backtracking.tex}
+\input{sections/4-branch-and-bound.tex}
+
+% --- Parte II ---
+\part{Aproximação e Qualidade das Soluções}
+\input{sections/5-aproximados-e-vertex-cover.tex}
+\input{sections/6-aproximados-tsp.tex}
+\input{sections/7-set-cover-bin-packing-comparacao.tex}
+
+\phantompart
+\input{sections/8-consideracoes-finais.tex}
+
+% ELEMENTOS PÓS-TEXTUAIS
+\postextual
+
+\input{sections/9-references.tex}
+
+\end{document}
