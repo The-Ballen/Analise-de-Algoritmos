@@ -1,0 +1,68 @@
+name: Build PDF and Auto Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - '.gitignore'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Para ler o histórico de tags
+
+      - name: 2. Setup Tectonic
+        uses: wtfjoke/setup-tectonic@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 3. Compile LaTeX and rename PDF
+        run: |
+          tectonic main.tex
+          mv main.pdf Algorithm-Analysis.pdf
+      
+      - name: 4. Check if any Git tag already exists
+        id: check_tags
+        run: |
+          git fetch --tags --force
+          if [ -z "$(git tag -l)" ]; then
+            echo "first_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "first_release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 5. Bump version and create tag
+        id: bump_version
+        uses: mathieudutour/github-tag-action@v7
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.check_tags.outputs.first_release == 'true' && '1.0.0' || '' }} # No 1º push cria v1.0.0
+          default_bump: patch # Incrementa de vX.Y.Z para vX.Y.(Z+1) por padrão
+          force_bump: patch # Garante que todo push válido gere nova tag
+
+      - name: 6. Create GitHub Release
+        if: steps.bump_version.outputs.new_tag != ''
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.bump_version.outputs.new_tag }}
+          name: "Release ${{ steps.bump_version.outputs.new_tag }}"
+          body: |
+            ## Compiled Document Release (${{ steps.bump_version.outputs.new_tag }})
+
+            Automatically compiled PDF with Tectonic and published via GitHub Actions from commit [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
+
+            ### Changelog
+            ${{ steps.bump_version.outputs.changelog }}
+          files: Algorithm-Analysis.pdf
+          generate_release_notes: false
