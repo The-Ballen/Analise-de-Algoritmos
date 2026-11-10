@@ -1,0 +1,113 @@
+% !TeX root = ../main.tex
+
+% ----------------------------------------------------------
+% Capítulo 7 (Integrante 7)
+% ----------------------------------------------------------
+\chapter{Set Cover, Bin Packing e Comparação entre Estratégias}
+
+\section{Definição do Problema Set Cover}
+
+\section{Definição do Problema Bin Packing}
+
+\section{Exemplo de Aplicação de Estratégia Gulosa ou Aproximada}
+
+Um caso clássico de aplicação prática derivado diretamente do Problema de Cobertura de Conjuntos (\textit{Set Cover}) --- que é comprovadamente NP-difícil --- é o \textbf{Problema da Cobertura Máxima Orçada} (\textit{Budgeted Maximum Coverage Problem}), como na instalação de antenas de internet para cobrir moradores respeitando um orçamento limitado.
+
+\subsection{Funcionamento da Estratégia Gulosa de Custo-Benefício}
+
+A ideia central da estratégia consiste em escolher iterativamente o local de antena (subconjunto) que oferece o \textbf{melhor custo-benefício marginal imediato}, contabilizando apenas os moradores que ainda não possuem sinal de internet. O funcionamento estrutura-se nos seguintes passos:
+
+\begin{enumerate}
+    \item \textbf{Inicialização:} Define-se o orçamento total disponível $B$, inicializa-se o conjunto de pessoas já atendidas como vazio ($C = \emptyset$) e mantém-se a lista de locais candidatos disponíveis para instalação.
+    \item \textbf{Cálculo do Ganho Marginal:} A cada iteração, para cada local candidato $i$ ainda não selecionado, calcula-se quantas \textbf{pessoas novas} ($|S_i \setminus C|$) aquela antena passaria a atender, descontando-se os indivíduos que já estão cobertos por antenas instaladas em passos anteriores.
+    \item \textbf{Avaliação da Razão de Eficiência:} Para cada local $i$, divide-se o número de novas pessoas cobertas pelo custo financeiro de instalação naquele ponto ($c_i$), obtendo a razão de custo-benefício:
+    \begin{equation}
+        R_i = \frac{|S_i \setminus C|}{c_i}
+    \end{equation}
+    \item \textbf{Seleção e Verificação Orçamentária:} Seleciona-se o local que apresenta a maior razão $R_i$ e verifica-se se o seu custo $c_i$ cabe no orçamento restante. Se couber, o local é adicionado à solução final, seu custo é descontado do orçamento, as novas pessoas são unidas ao conjunto de atendidos ($C$) e o local é removido dos disponíveis. Caso o local mais eficiente estoure o orçamento restante, ele é descartado e testa-se o próximo melhor candidato da lista.
+    \item \textbf{Critério de Parada:} O laço de repetição continua até que o orçamento disponível se esgote ou não restem locais candidatos viáveis.
+\end{enumerate}
+
+\subsection{Vantagem de Velocidade e Garantia de Qualidade}
+
+Enquanto o método de força bruta precisaria testar todos os subconjuntos possíveis de locais que respeitam o orçamento --- o que gera uma explosão combinatória da ordem de $O(2^m)$ para $m$ locais candidatos ---, a estratégia gulosa atua como um gerenciador incremental. Ela avalia apenas o estado atual, toma uma decisão definitiva por etapa e nunca retrocede (\textit{no backtracking}). Com isso, no pior caso, o algoritmo realiza no máximo $m$ iterações, inspecionando os locais restantes em cada passo, o que reduz a complexidade para um \textbf{tempo polinomial quadrático} $O(m^2)$.
+
+\textbf{A estratégia não garante encontrar a solução ótima absoluta.} Como ela toma decisões localmente ótimas (escolhendo o melhor índice imediato naquele exato instante), uma antena escolhida no início pode consumir uma fatia do orçamento que impediria a compra combinada de duas outras antenas ligeiramente menos eficientes individualmente, mas que juntas cobririam um público maior. Entretanto, por se tratar de uma função submodular (retornos decrescentes de cobertura), essa estratégia gulosa modificada configura um \textbf{algoritmo de aproximação com desempenho comprovado}: a literatura demonstra que variações desse método garantem matematicamente atingir pelo menos $(1 - 1/e) \approx 63,2\%$ da cobertura da solução ótima global.
+
+Para mensurar a eficiência prática e teórica da solução encontrada pelo sistema, são fundamentais as seguintes métricas e informações:
+
+\begin{itemize}
+    \item \textbf{Índice de Custo Efetivo por Usuário Atendido:} A razão consolidada entre o total de pessoas beneficiadas e o montante financeiro efetivamente investido.
+    \item \textbf{Taxa de Utilização do Orçamento e Cobertura Demográfica:} O percentual da população total da região que passou a ter acesso à internet e a verificação de eventual saldo ocioso no orçamento.
+    \item \textbf{Comparativo com um Limite Superior Matemático (\textit{Upper Bound}):} O resultado da relaxação do problema (por exemplo, permitindo antenas ``fracionárias'' via Programação Linear) ou a cota teórica de aproximação, permitindo saber exatamente o quão perto do ideal teórico (desconhecido) o algoritmo chegou.
+\end{itemize}
+
+\subsection{Exemplo Numérico Passo a Passo}
+
+\section{Comparação entre Heurísticas e Algoritmos Aproximados}
+
+A \autoref{tab:comparativo_heuristicas_aproximacao} sintetiza as diferenças conceituais, teóricas e práticas entre as abordagens heurísticas e os algoritmos de aproximação:
+
+\begin{table}[htb]
+\centering
+\caption{\label{tab:comparativo_heuristicas_aproximacao}Comparativo técnico entre Heurísticas e Algoritmos de Aproximação.}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{5.5cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+\hline
+\rowcolor{gray!20}
+\textbf{Critério} & \textbf{Heurística} & \textbf{Algoritmo de Aproximação} \\ \hline
+\textbf{Objetivo Principal} & Encontrar uma solução rápida e satisfatória (``boa o suficiente'') para problemas computacionais muito complexos ou de grande escala. & Encontrar soluções de boa qualidade (comprovadamente próximas da ótima) em tempo polinomial para problemas de otimização difíceis (NP-difíceis). \\ \hline
+\textbf{Garantem a solução ótima?} & Não. & Não. \\ \hline
+\textbf{Possuem garantia formal de qualidade?} & Não. O erro no pior caso pode ser arbitrariamente grande. & Sim. Possuem um fator ou razão matemática de aproximação comprovada por teorema. \\ \hline
+\textbf{Principal vantagem} & Redução drástica da complexidade computacional e do tempo de resposta, aliada à facilidade de adaptação a regras de negócio complexas. & Segurança e previsibilidade: garantia matemática da qualidade da solução dentro de um tempo de execução rápido (polinomial). \\ \hline
+\textbf{Principal limitação} & Falta de garantia de otimalidade e de limite de erro (risco de ficar preso em ótimos locais ruins sem detecção). & Rigidez matemática: nem todo problema complexo admite uma aproximação eficiente devido a barreiras teóricas de \textit{inaproximabilidade} (como o Teorema PCP). \\ \hline
+\textbf{Exemplo de aplicação} & Algoritmos de busca informada em aplicativos de GPS (como Waze e Google Maps) e heurística do Vizinho Mais Próximo. & Algoritmo de Christofides ($1,5$-aproximação) para planejamento de rotas no Caixeiro-Viajante Métrico e Cobertura de Vértices. \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Discussão sobre Qualidade das Soluções, Tempo de Execução e Garantias Teóricas}
+
+A adoção de métodos heurísticos ou aproximados no projeto de algoritmos envolve um balanço crítico entre o custo computacional de execução e a precisão matemática do resultado obtido. No caso das heurísticas, destacam-se duas vantagens fundamentais e duas limitações intrínsecas:
+
+\subsection{Vantagens do Uso de Heurísticas}
+
+\begin{enumerate}
+    \item \textbf{Viabilidade Temporal e Escalabilidade para Grandes Instâncias:} A principal vantagem de uma heurística é a sua capacidade de fornecer respostas válidas em tempo polinomial baixo (frequentemente linear $O(n)$, log-linear $O(n \log n)$ ou quadrático $O(n^2)$) para problemas cuja solução exata exigiria tempo exponencial $O(2^n)$ ou fatorial $O(n!)$. Na prática, isso permite que sistemas computacionais escalem para lidar com bancos de dados reais contendo dezenas de milhares de variáveis --- como o roteamento logístico de uma metrópole ou a alocação de processos em servidores em nuvem --- entregando decisões em segundos ou milissegundos, onde algoritmos exatos travariam por exaustão de tempo ou de memória RAM.
+    \item \textbf{Simplicidade de Modelagem e Flexibilidade de Adaptação:} Algoritmos exatos (como Programação Linear Inteira ou \textit{Branch-and-Bound}) costumam exigir formulações matemáticas rígidas e provas formais complexas que se desfazem facilmente quando uma nova regra de negócio é adicionada ao problema. As heurísticas, por outro lado, são baseadas em regras intuitivas e construtivas. Isso torna sua implementação em código mais direta e permite que o desenvolvedor incorpore restrições complexas do mundo real (como janelas de horário dinâmicas, penalidades não lineares ou preferências do usuário) apenas ajustando a função de avaliação ou os critérios de escolha local.
+\end{enumerate}
+
+\subsection{Limitações do Uso de Heurísticas}
+
+\begin{enumerate}
+    \item \textbf{Ausência de Garantia de Otimalidade e de Limite de Erro (Estagnação em Ótimos Locais):} Como as heurísticas descartam grandes porções do espaço de busca e tomam decisões baseadas em informações restritas (visão local ou míope), elas não garantem encontrar a solução ótima global. Mais grave ainda do ponto de vista teórico: uma heurística pura não oferece uma cota matemática formal sobre o quão distante a resposta entregue está da solução ideal. O algoritmo pode ficar preso em uma ``armadilha'' topológica (um ótimo local) e retornar uma solução que é $5\%$ pior que a ótima em um dia, mas $80\%$ pior no dia seguinte, sem que o sistema consiga detectar essa degradação por conta própria.
+    \item \textbf{Alta Sensibilidade aos Dados de Entrada e Especificidade de Domínio:} O desempenho qualitativo de uma heurística específica costuma ser fortemente dependente da estrutura ou distribuição dos dados de entrada (bem como da escolha de parâmetros iniciais, como o vértice de partida). Uma regra prática projetada sob medida para funcionar muito bem no Problema do Caixeiro-Viajante com distâncias euclidianas planas pode produzir resultados desastrosos se aplicada a uma rede com custos assimétricos (como tarifas aéreas) ou a um problema de escalonamento de tarefas. Assim, heurísticas clássicas carecem de generalidade, exigindo reengenharia e baterias extensas de testes empíricos sempre que o cenário do problema sofre alterações estruturais.
+\end{enumerate}
+
+\section{Identificação de Situações Mais Adequadas para Cada Estratégia no Mundo Real}
+
+A seguir, são analisadas três situações reais da indústria e da computação nas quais o uso de heurísticas e algoritmos de aproximação é indispensável para viabilizar a operação.
+
+\subsection{Situação 1: Organização Industrial e Escalonamento de Tarefas (\textit{Job Shop Scheduling})}
+
+\begin{itemize}
+    \item \textbf{Problema a ser resolvido:} Determinar a ordem sequencial e o momento exato em que um conjunto de tarefas (ou lotes de produtos) deve ser processado em um conjunto de máquinas industriais (ou núcleos de um processador), respeitando restrições técnicas de precedência e prazos, de modo a minimizar o tempo total de conclusão da produção (\textit{makespan}).
+    \item \textbf{Por que encontrar a solução ideal é difícil:} Devido ao crescimento exponencial e fatorial das combinações possíveis. À medida que o número de tarefas ($n$) e de máquinas ($m$) aumenta, a quantidade de escalonamentos distintos cresce na ordem de $(n!)^m$. Para dezenas de tarefas e máquinas, testar todas as sequências torna-se matematicamente intratável.
+    \item \textbf{Como uma heurística ou algoritmo de aproximação ajuda:} Transformam um problema intratável em um processo resolvido em segundos. Algoritmos de aproximação clássicos (como o \textit{Escalonamento em Lista de Graham}, que possui garantia de aproximação de $2 - \frac{1}{m}$) ou heurísticas de despacho como \textit{Menor Tempo de Processamento Primeiro} (SPT) alocam as tarefas imediatamente assim que uma máquina fica livre, entregando um cronograma altamente produtivo e próximo do ideal sem paralisar a fábrica.
+\end{itemize}
+
+\subsection{Situação 2: Roteamento de Veículos e Logística de Transporte (\textit{Vehicle Routing Problem -- VRP})}
+
+\begin{itemize}
+    \item \textbf{Problema a ser resolvido:} Encontrar o conjunto de rotas mais eficiente para uma frota de múltiplos veículos atender a centenas de clientes espalhados por diferentes regiões geográficas, utilizando o mínimo possível de combustível e tempo, sem violar a capacidade de carga de cada caminhão.
+    \item \textbf{Por que encontrar a solução ideal é difícil:} Além de generalizar o Problema do Caixeiro-Viajante (herdando sua explosão combinatória NP-difícil), o problema incorpora múltiplas restrições simultâneas do mundo real --- como limites de peso/volume da frota, janelas de horário de recebimento dos clientes e variações dinâmicas de trânsito --- que inviabilizam algoritmos exatos em escala comercial.
+    \item \textbf{Como uma heurística ou algoritmo de aproximação ajuda:} Atuam diretamente nas duas maiores exigências da operação: velocidade de tomada de decisão e respeito às restrições rígidas. Heurísticas construtivas consagradas, como o \textbf{Algoritmo das Economias de Clarke e Wright}, combinadas com meta-heurísticas de busca local (como \textit{2-opt} ou \textit{Simulated Annealing}), reduzem um cálculo que levaria séculos para poucos minutos, gerando rotas logísticas enxutas e prontas para execução diária.
+\end{itemize}
+
+\subsection{Situação 3: Armazenamento e Computação em Nuvem (\textit{Bin Packing} e Problema da Mochila)}
+
+\begin{itemize}
+    \item \textbf{Problema a ser resolvido:} Distribuir e alocar uma quantidade massiva de máquinas virtuais, contêineres de aplicações ou arquivos digitais dentro do menor número possível de servidores físicos em um \textit{Data Center}, otimizando o consumo de energia elétrica e o uso de hardware.
+    \item \textbf{Por que encontrar a solução ideal é difícil:} Trata-se do clássico problema de empacotamento (\textit{Bin Packing}) em múltiplas dimensões. Diferentemente de caixas físicas onde avalia-se apenas o volume ou peso, na computação em nuvem cada tarefa consome simultaneamente múltiplas dimensões de recursos (CPU, memória RAM, largura de banda de rede e leitura de disco), além de sofrer alterações dinâmicas a cada segundo com novas requisições de usuários.
+    \item \textbf{Como uma heurística ou algoritmo de aproximação ajuda:} O problema é solucionado em tempo real aplicando regras lógicas rápidas de empacotamento, sem necessidade de testar todas as permutações de servidores. Algoritmos de aproximação gulosos como o \textbf{\textit{First-Fit Decreasing} (FFD)} --- que ordena os processos do maior para o menor e aloca cada um no primeiro servidor com espaço disponível --- executam em tempo $O(n \log n)$ e garantem matematicamente utilizar um número de servidores muito próximo do mínimo teórico possível.
+\end{itemize}
