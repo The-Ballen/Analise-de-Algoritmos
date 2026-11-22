@@ -1,5 +1,4 @@
 % !TeX root = ../main.tex
-
 % ----------------------------------------------------------
 % Capítulo 4 (Integrante 4)
 % ----------------------------------------------------------
@@ -7,14 +6,142 @@
 
 \section{Conceito de Branch-and-Bound}
 
+O método \textit{branch-and-bound} (ramificação e limite) é uma estratégia exata para resolver problemas de otimização combinatória. Seu objetivo é encontrar uma solução ótima sem precisar enumerar, até o fim, todas as soluções possíveis. Para isso, o método organiza as alternativas em uma árvore de busca e descarta antecipadamente os ramos que não podem produzir uma resposta melhor do que a melhor solução já conhecida.
+
+A estratégia combina dois elementos. O primeiro é o \textit{branching}, ou ramificação, que divide o problema original em subproblemas menores. O segundo é o \textit{bounding}, ou cálculo de limites, que estima a melhor qualidade que ainda pode ser obtida dentro de cada subproblema. Em um problema de minimização, um limite inferior (\textit{lower bound}) informa um custo que nenhuma solução completa daquele ramo conseguirá ultrapassar para baixo. Se esse limite já for maior ou igual ao custo da melhor solução viável conhecida, o ramo pode ser podado com segurança.
+
+Assim, o branch-and-bound não abandona a garantia de otimalidade: uma poda só é realizada quando existe uma justificativa matemática de que o ramo não contém uma solução melhor. A economia de tempo vem de não expandir alternativas irrelevantes, e não de aceitar uma solução aproximada. Em consequência, o método continua tendo crescimento exponencial no pior caso, embora frequentemente seja muito mais rápido que a força bruta em instâncias reais \cite{cormen2012,miyazawa_intro}.
+
 \section{Funcionamento da Divisão do Espaço de Busca (Branching)}
+
+Considere o TSP simétrico, com uma cidade de origem $A$. Uma solução parcial pode ser representada por um caminho que começa em $A$ e visita algumas cidades sem repetição. A partir de um nó parcial, cada cidade ainda não visitada gera um novo filho da árvore. Por exemplo, depois de escolher $A \rightarrow B$, os próximos ramos possíveis são $A \rightarrow B \rightarrow C$ e $A \rightarrow B \rightarrow D$, caso $C$ e $D$ ainda estejam pendentes.
+
+A raiz representa o problema sem decisões tomadas. Os níveis seguintes correspondem ao número de cidades já incluídas no caminho. Uma folha representa uma rota completa, com o retorno à origem. Em uma busca exaustiva, todas as folhas seriam avaliadas. No branch-and-bound, cada nó recebe um limite antes de ser expandido. A busca pode usar uma fila, uma pilha ou uma fila de prioridade; esta última permite explorar primeiro o nó com menor limite, estratégia conhecida como \textit{best-first}.
+
+A ordem de exploração não altera o resultado correto, desde que a poda respeite os limites. Entretanto, uma boa ordem costuma encontrar rapidamente uma solução viável de baixo custo. Essa solução funciona como um limite superior global (\textit{upper bound}), chamado aqui de $UB$, e torna as podas seguintes mais agressivas.
 
 \section{Conceito de Limites e Critérios de Poda (Bounding)}
 
+Para uma rota parcial $P$, seja $g(P)$ o custo das arestas já escolhidas. Um limite inferior pode ser obtido somando $g(P)$ a uma estimativa otimista do custo necessário para conectar as cidades restantes e retornar à origem:
+\begin{equation}
+    LB(P) = g(P) + h(P),
+\end{equation}
+onde $h(P)$ nunca pode ser maior que o custo realmente necessário para completar a rota. A estimativa é dita otimista porque pode subestimar o custo, mas nunca deve superestimá-lo; caso contrário, uma solução ótima poderia ser podada indevidamente.
+
+Uma forma didática de construir $h(P)$ é somar, para cada cidade que ainda precisa participar do ciclo, a menor aresta disponível que ela necessariamente deverá utilizar. Como cada aresta pode ser contada duas vezes nessa soma, divide-se o resultado por dois. Essa relaxação fornece um limite inferior, ainda que nem sempre seja apertado. Outras implementações utilizam redução de linhas e colunas da matriz de custos ou limites baseados em árvores geradoras mínimas.
+
+Para um problema de minimização, o critério de poda é:
+\begin{equation}
+    \text{se } LB(P) \geq UB, \text{ então o nó } P \text{ é podado.}
+\end{equation}
+Se $LB(P) < UB$, ainda existe a possibilidade de o ramo produzir uma rota melhor; por isso, ele deve ser ramificado ou colocado na estrutura de busca. Quando uma folha gera uma rota com custo inferior a $UB$, atualiza-se a melhor solução e o novo valor de $UB$ pode provocar novas podas.
+
 \section{Aplicação da Estratégia em um Exemplo de Otimização}
+
+Considere quatro cidades $A$, $B$, $C$ e $D$, com a matriz simétrica de distâncias da Tabela~\ref{tab:bnb-matriz}. A origem é $A$ e toda rota deve retornar a ela.
+
+\begin{table}[htb]
+\centering
+\caption{Matriz de distâncias usada no exemplo de branch-and-bound.}
+\label{tab:bnb-matriz}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{gray!20}
+\textbf{De/Para} & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} \\ \hline
+\textbf{A} & 0 & 10 & 12 & 60 \\ \hline
+\textbf{B} & 10 & 0 & 15 & 12 \\ \hline
+\textbf{C} & 12 & 15 & 0 & 100 \\ \hline
+\textbf{D} & 60 & 12 & 100 & 0 \\ \hline
+\end{tabular}
+\end{table}
+
+Inicialmente, uma heurística rápida fornece a rota $A \rightarrow B \rightarrow D \rightarrow C \rightarrow A$, de custo
+\begin{equation}
+    UB = 10 + 12 + 100 + 12 = 134\text{ km}.
+\end{equation}
+Esse valor não prova que a rota é ótima; ele apenas estabelece uma solução incumbente e um limite superior inicial. A partir da raiz, o algoritmo ramifica pelas três escolhas possíveis: $A \rightarrow B$, $A \rightarrow C$ e $A \rightarrow D$.
+
+A Tabela~\ref{tab:bnb-limites} resume uma avaliação possível de alguns nós. Para facilitar a visualização, utiliza-se um limite inferior conservador: custo parcial somado a uma estimativa otimista do fechamento do ciclo. Os valores podem ser obtidos por uma relaxação da exigência de visitar cada cidade exatamente uma vez; portanto, são menores ou iguais ao custo de qualquer completamento válido.
+
+\begin{table}[htb]
+\centering
+\caption{Nós visitados e limites inferiores no exemplo.}
+\label{tab:bnb-limites}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|l|c|c|l|}
+\hline
+\rowcolor{gray!20}
+\textbf{Caminho parcial} & \textbf{Custo} & \textbf{Limite inferior} & \textbf{Decisão} \\ \hline
+$A\rightarrow B$ & 10 & 99 & expandir \\ \hline
+$A\rightarrow C$ & 12 & 99 & expandir \\ \hline
+$A\rightarrow D$ & 60 & 99 & expandir \\ \hline
+$A\rightarrow B\rightarrow C$ & 25 & 135 & podar após $UB=99$ \\ \hline
+$A\rightarrow B\rightarrow D$ & 22 & 134 & podar após $UB=99$ \\ \hline
+$A\rightarrow C\rightarrow B$ & 27 & 99 & expandir \\ \hline
+\end{tabular}
+\end{table}
+
+A expansão de $A\rightarrow C\rightarrow B$ completa a rota $A\rightarrow C\rightarrow B\rightarrow D\rightarrow A$, cujo custo é
+\begin{equation}
+    12 + 15 + 12 + 60 = 99\text{ km}.
+\end{equation}
+Logo, o limite superior é atualizado para $UB=99$. A partir desse momento, qualquer nó com limite inferior maior ou igual a $99$ não pode melhorar a incumbente e é podado. Por exemplo, o ramo $A\rightarrow B\rightarrow C$ já possui limite $135$ e é descartado sem testar sua conclusão. O mesmo ocorre com $A\rightarrow B\rightarrow D$, cujo limite é $134$.
+
+Nesse exemplo, a poda evita completar vários caminhos que seriam avaliados pela força bruta. A rota de $99$ km é ótima porque todos os ramos não explorados possuem limite inferior pelo menos igual a esse valor. Se o algoritmo não tivesse encontrado primeiro uma boa incumbente, o limite superior seria maior e menos nós seriam podados; por isso, a escolha da ordem de exploração influencia o desempenho, mas não a correção.
 
 \section{Apresentação de um Esquema ou Pseudocódigo Simplificado}
 
+O pseudocódigo a seguir descreve uma versão recursiva para um problema de minimização. A função \texttt{limite\_inferior} deve implementar uma estimativa otimista adequada ao problema.
+
+\begin{verbatim}
+BranchAndBound(caminho, naoVisitadas, custoAtual):
+    limite <- custoAtual + limite_inferior(caminho, naoVisitadas)
+    se limite >= melhorCusto:
+        retorne                         // poda por limite
+
+    se naoVisitadas estiver vazia:
+        custoRota <- custoAtual + distancia(ultima(caminho), origem)
+        se custoRota < melhorCusto:
+            melhorCusto <- custoRota
+            melhorRota <- caminho + origem
+        retorne
+
+    para cada cidade v em naoVisitadas:
+        adicionar v ao caminho
+        BranchAndBound(caminho, naoVisitadas - {v},
+                       custoAtual + distancia(ultima(caminho), v))
+        remover v do caminho             // retrocesso
+\end{verbatim}
+
+Antes da primeira chamada, define-se \texttt{melhorRota} como vazia e \texttt{melhorCusto} como infinito, ou como o custo de uma rota gerada por uma heurística. Em uma implementação eficiente, os nós podem ser armazenados em uma fila de prioridade ordenada pelo limite inferior. Também é possível memorizar limites já calculados e interromper a expansão quando uma restrição adicional do problema for violada.
+
 \section{Comparação entre Backtracking e Branch-and-Bound}
 
+Backtracking e branch-and-bound percorrem uma árvore de decisões e podem usar retrocesso para retornar de um subproblema ao seu pai. A diferença principal está no motivo da poda. No backtracking, normalmente se interrompe um ramo porque ele deixou de ser viável: por exemplo, uma atribuição já viola uma restrição. No branch-and-bound, um ramo pode continuar viável, mas é abandonado porque seu melhor resultado possível não supera a solução incumbente.
+
+Portanto, o backtracking concentra-se na viabilidade, enquanto o branch-and-bound acrescenta uma análise quantitativa da qualidade. Em um TSP, o backtracking poderia rejeitar uma rota que repete uma cidade, mas ainda teria de examinar muitas rotas válidas. O branch-and-bound também rejeita rotas sem repetição quando o limite inferior indica que elas serão caras demais.
+
+\begin{table}[htb]
+\centering
+\caption{Comparação entre backtracking e branch-and-bound.}
+\label{tab:bnb-backtracking}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{5.1cm}|>{\raggedright\arraybackslash}p{5.1cm}|}
+\hline
+\rowcolor{gray!20}
+\textbf{Critério} & \textbf{Backtracking} & \textbf{Branch-and-bound} \\ \hline
+Objetivo & Encontrar soluções que respeitem as restrições. & Encontrar e provar uma solução ótima. \\ \hline
+Critério de poda & Infactibilidade ou violação de restrição. & Limite não melhor que a solução incumbente. \\ \hline
+Informação adicional & Regras de consistência do problema. & Limites inferiores/superiores e função de custo. \\ \hline
+Garantia & Pode ser exato quando todas as alternativas relevantes são exploradas. & Exato, desde que os limites sejam válidos. \\ \hline
+Custo no pior caso & Exponencial ou fatorial. & Também exponencial ou fatorial. \\ \hline
+\end{tabular}
+\end{table}
+
+Em síntese, o branch-and-bound é especialmente útil quando existe uma boa função de limite e quando uma solução inicial de qualidade pode ser encontrada rapidamente. A eficácia prática depende da força desses limites: quanto mais próximos do custo ótimo, mais podas são possíveis. Ainda assim, não há garantia de tempo polinomial para o TSP; em instâncias desfavoráveis, a árvore pode permanecer grande e o algoritmo pode se aproximar do comportamento da busca exaustiva. Essa combinação entre garantia de otimalidade e redução prática do espaço de busca explica sua importância em problemas de otimização combinatória.
+
 \section{Comparação Geral das Estratégias de Resolução e Busca (Parte I)}
+
+No contexto da Parte I, o branch-and-bound ocupa uma posição intermediária entre a busca exaustiva e as heurísticas. Ele mantém a garantia de encontrar a solução ótima, como a enumeração completa, mas tenta reduzir o número de alternativas por meio de limites. Já os métodos guloso e de busca local normalmente executam mais rapidamente e escalam melhor, porém podem retornar soluções subótimas. Assim, a escolha depende do equilíbrio desejado entre tempo de processamento, qualidade da rota e necessidade de comprovar a otimalidade.
