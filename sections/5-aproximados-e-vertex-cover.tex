@@ -3,50 +3,204 @@
 % ----------------------------------------------------------
 % Capítulo 5 (Integrante 5)
 % ----------------------------------------------------------
-\chapter{Algoritmos Aproximados e Cobertura de Vértices}
 
+\chapter{Algoritmos Aproximados e Cobertura de Vértices}
 \section{Conceito de Algoritmo Aproximado}
 
-Quando lidamos com problemas de otimização pertencentes à classe NP-difícil, a impossibilidade prática de obter soluções exatas em tempo hábil motivou o desenvolvimento de uma classe rigorosa de métodos conhecida como \textbf{Algoritmos de Aproximação}.
+Algoritmos de aproximação são métodos computacionais eficientes — isto é, que executam obrigatoriamente em tempo polinomial — projetados para resolver problemas de otimização difíceis (geralmente NP-difíceis), nos quais não se conhece algoritmo exato polinomial (e, se $P \neq NP$, não existe) \cite{fernandes2021}. Diferentemente das heurísticas comuns, um algoritmo de aproximação possui uma prova matemática formal que atesta a qualidade da solução gerada para qualquer instância de entrada. Essa distância é medida pela razão de aproximação, formalizada na Seção de Razão.
 
-\subsection{Definição de Algoritmo de Aproximação}
-
-Algoritmos de aproximação são métodos computacionais eficientes --- isto é, que executam obrigatoriamente em \textbf{tempo polinomial} --- projetados para resolver problemas de otimização difíceis (geralmente NP-difíceis), nos quais encontrar a solução exata demandaria um tempo de processamento exponencial ou proibitivo. Diferentemente das heurísticas comuns, um algoritmo de aproximação possui uma prova matemática formal que atesta a qualidade da solução gerada para qualquer instância de entrada.
-
-\subsection{Relação com a Busca pela Solução Ótima e Motivação}
-
-A relação fundamenta-se em um compromisso (\textit{trade-off}) rigorosamente controlado: abre-se mão da certeza de alcançar o resultado matematicamente perfeito (a solução ótima global) em troca de velocidade de processamento (tempo polinomial), mas mantém-se o controle estrito sobre a margem de erro máxima por meio de uma \textbf{garantia matemática}. Assim, embora o algoritmo não entregue necessariamente o valor ótimo $OPT$, ele utiliza propriedades estruturais do próprio ótimo (como relaxações lineares ou limites inferiores) para assegurar que a resposta obtida nunca se afaste do ideal além de um fator conhecido.
-
-O principal motivo para utilizar uma solução aproximada reside na barreira da complexidade computacional: achar a solução ótima em problemas NP-difíceis exige explorar espaços de busca que crescem de forma exponencial ou fatorial, tornando o processamento inviável para entradas reais de médio e grande porte. Os algoritmos de aproximação reduzem esse tempo drasticamente para uma escala polinomial, oferecendo a segurança adicional --- inexistente nas heurísticas puras --- de que o sistema jamais produzirá uma solução arbitrariamente ruim, mesmo nos piores cenários de entrada.
+Sua relação com a Busca pela Solução Ótima fundamenta-se em um compromisso (trade-off) rigorosamente controlado: abre-se mão da certeza de alcançar o resultado matematicamente perfeito (a solução ótima global) em troca de velocidade de processamento (tempo polinomial), mas mantém-se o controle estrito sobre a margem de erro máxima por meio de uma garantia matemática. Assim, embora o algoritmo não entregue necessariamente o valor ótimo OPT, ele utilizará limites relaxados do problema para estabelecer a razão de aproximação na análise teórica através da substituição por um limite inferior \cite{quora_approx_heuristic}. É isso que permite afirmar que o resultado nunca se afasta do ótimo além de um fator conhecido, ao contrário das heurísticas puras, que podem produzir soluções arbitrariamente ruins em certas instâncias \cite{miyazawa_aprox}.
 
 \section{Diferença entre Algoritmos Exatos, Heurísticos e Aproximados}
+\label{sec:diferenca}
 
-Na Análise de Algoritmos, a distinção fundamental entre os métodos exatos, heurísticos e aproximados reside no compromisso entre o tempo de execução e a garantia matemática de qualidade da solução:
+A definição, a grosso modo, de algoritmos é uma sequência de instruções que visam resolver um determinado problema. Algoritmos exatos, de aproximação e heurísticas possuem esse mesmo objetivo, mas todos eles garantem a solução ótima ou a qualidade da resposta? Ou todos os problemas podem ser resolvidos com algum desses tipos de algoritmos?
 
+O algoritmo exato é definido como aquele que procura a solução exata do problema. Ele é baseado em matemática pura e consiste em explorar todas as possíveis combinações para chegar à solução ou provar que não existe solução para o problema. Esse tipo de algoritmo garante que você terá uma solução matemática ótima. O problema é que ele pode ser lento e exigir grande capacidade computacional, a depender do porte do seu problema \cite{wikipedia_exact_alg}.
+
+Já algoritmos de aproximação buscam soluções rápidas em tempo polinomial, mas são construídos sobre propriedades matemáticas estritas que provam o quão próxima sua resposta está da solução ótima. O desenvolvedor conhece de antemão o pior cenário possível. Por exemplo, um algoritmo 2-aproximado para um problema de minimização garante matematicamente que o custo final jamais ultrapassará o dobro do custo da solução ótima, não importa o quão difícil seja a instância \cite{fernandes2021}.
+
+Por outro lado, heurísticas se baseiam na ``intuição'', em regras práticas ou em tentativas empíricas inteligentes para achar uma solução rápida e satisfatória. Contudo, elas não oferecem garantias formais: sob uma determinada condição favorável, podem encontrar a solução perfeita; em outra configuração de dados, podem entregar uma solução péssima sem que o usuário tenha meios de perceber o prejuízo \cite{sciencedirect_heuristic}.
+
+A tabela \ref{tab:comparacao-abordagens} apresenta as diferenças de cada abordagem no que se refere a suas particularidades e metodologias de resolução de problemas.
+
+\begin{table}[!ht]
+\centering
+\caption{Comparação entre algoritmos exatos, de aproximação e heurísticas.}
+\label{tab:comparacao-abordagens}
+\begin{tabular}{p{3.2cm}p{3.6cm}p{3.8cm}p{3.6cm}}
+\hline
+\textbf{Critério} & \textbf{Algoritmos exatos} & \textbf{Algoritmos de aproximação} & \textbf{Heurísticas} \\
+\hline
+Objetivo principal & Garantir a solução ótima (ou exata) de um problema, com precisão matemática, sem aproximações ou margem de erro. & Encontrar soluções de boa qualidade (comprovadamente próximas da ótima) em tempo polinomial para problemas de otimização difíceis (NP-difíceis). & Encontrar uma solução rápida e satisfatória (``boa o suficiente'') para problemas computacionais muito complexos ou de grande escala. \\
+\hline
+Garantem a solução ótima? & Sim. & Não. & Não. \\
+\hline
+Possuem garantia formal de qualidade? & Sim; possuem a garantia formal máxima de qualidade: a otimalidade absoluta, com erro zero. & Sim; possuem um fator ou razão matemática de aproximação comprovada por teorema. & Não; o erro no pior caso pode ser arbitrariamente grande. \\
+\hline
+Principal vantagem & Garantia absoluta de encontrar a solução ótima global, ou a melhor resposta matematicamente possível para um problema. & Segurança e previsibilidade: garantia matemática da qualidade da solução dentro de um tempo de execução rápido (polinomial). & Redução drástica da complexidade computacional e do tempo de resposta, aliada à facilidade de adaptação a regras de negócio complexas. \\
+\hline
+Principal limitação & Alto custo computacional em tempo de execução e uso de memória para problemas de grande escala. & Rigidez matemática: nem todo problema complexo admite uma aproximação eficiente devido a barreiras teóricas de inaproximabilidade (como o Teorema PCP). & Falta de garantia de otimalidade e de limite de erro (risco de ficar preso em ótimos locais ruins sem detecção). \\
+\hline
+Exemplo de aplicação & Achar o caminho mais curto ou de menor custo entre pontos em uma rede (ex.: algoritmo de Dijkstra ou programação linear inteira para distribuição de cargas). & Algoritmo de Christofides ($1{,}5$-aproximação) para planejamento de rotas no Caixeiro Viajante Métrico e Cobertura de Vértices. & Algoritmos de busca informada em aplicativos de GPS (como Waze e Google Maps) e heurística do Vizinho Mais Próximo. \\
+\hline
+\end{tabular}
+\footnotesize{\textit{Fonte:} Elaborado pelos autores (2026)}
+\end{table}
+
+Em síntese, o que separa as três famílias é aquilo que cada uma prova: o exato, a otimalidade; o aproximado, um limite para o erro; a heurística, nenhum dos dois. Esse limite para o erro é medido pela razão de aproximação, definida na Seção~\ref{sec:razao}.
+
+\section{Conceito de Razão de aproximação}\label{sec:razao}
+
+Considere um problema de otimização em que os custos são positivos. Para uma dada instância do problema, seja $C^*$ o custo da solução ótima e $C$ o custo da solução encontrada pelo algoritmo. Diz-se que o algoritmo é $p$-aproximação (ou que possui razão de aproximação $p$) se, para toda instância do problema,
+\begin{equation}\label{eq:razao-p}
+  \max\!\left(\frac{C}{C^*},\ \frac{C^*}{C}\right) \le p,
+\end{equation}
+em que o máximo considera ambos os casos do problema (minimização ou maximização) \cite{cormen2012}. Na minimização, vale $C \ge C^*$ e a desigualdade equivale a $C \le p \cdot C^*$, o que implica que a solução custa no máximo $p$ vezes o ótimo \cite{cormen2012}. Na maximização, vale $C \le C^*$ e a desigualdade equivale a $C \ge \frac{C^*}{p}$, o que implica que a solução encontrada vale, no mínimo, $\frac{1}{p}$ do ótimo \cite{cormen2012}. Em ambos os casos, $p \ge 1$, e quanto mais próximo de $1$, melhor. Quando $p = 1$, corresponde a uma solução ótima. Em alguns problemas, como o de \textit{Set Cover}, o valor da razão de aproximação depende do tamanho da entrada $n$, denotado por $p(n)$, e seu algoritmo guloso tem $p(n) = H(n)$, em que $n$ é o tamanho do universo de elementos a serem cobertos e $H(n)$ é o $n$-ésimo número harmônico — a soma dos inversos dos $n$ primeiros inteiros positivos ($1 + \frac{1}{2} + \frac{1}{3} + \cdots$) \cite{cormen2012}.
+
+Vale ressaltar que essa é uma garantia de pior caso: todos os casos, incluindo aqueles mais desfavoráveis, terão desempenho não pior do que o limite dado pela razão. Ou seja, a razão estabelece um teto, e não a qualidade típica do algoritmo, onde os resultados costumam ficar abaixo dele. Além disso, a razão observada ($C/C^*$) em uma instância e a razão garantida (limite $p$ em todas as instâncias) são conceitos distintos. Uma razão pode ser justa ou folgada. Uma razão justa é aquela em que há pelo menos uma instância na qual o algoritmo atinge exatamente o valor $p$.
+
+Por exemplo, considere um algoritmo $1{,}5$-aproximado para um problema de minimização. Seja uma instância do problema para a qual o custo ótimo é $C^* = 100$. Então, a garantia diz que o custo devolvido está entre $100$ e $150$. Se for $100$, a razão fica $1$, ou seja, a solução ótima; se for $130$, a razão é $1{,}3$ e ainda fica compatível com $p$; se for $150$, fica $1{,}5$ e estabelece o pior caso permitido; agora, se $C$ for $160$, sua razão é $1{,}6$ e viola a garantia, pois ultrapassa o $1{,}5$, de modo que um algoritmo que o produzisse em alguma instância não seria $1{,}5$-aproximado.
+
+Já em uma maximização, a razão é invertida. Por exemplo, um guloso para maximizar a cobertura com $k$ conjuntos garante que a cobertura seja pelo menos $1 - \frac{1}{e}$, aproximadamente $63{,}2\%$ do que a solução ótima cobre, o que corresponde a $p = \frac{e}{e - 1}$, aproximadamente $1{,}58$. Então, se o ótimo cobre $1000$ pessoas, o guloso vai cobrir pelo menos $632$. Se o ótimo cobre $1000$ pessoas e o guloso cobre $800$, a razão será $\frac{1000}{800} = 1{,}25 < 1{,}58$, ou seja, a garantia está cumprida. A questão agora é como medir a qualidade de uma solução quando $C^*$ não é conhecido, que é o pior caso geral, questão que será tratada na seção de qualidade.
+
+\section{Interpretação da qualidade de uma solução aproximada}
+\label{sec:qualidade}
+
+A razão $p$ da seção anterior responde a uma pergunta sobre o algoritmo: qual é o pior caso possível que poderia ocorrer em uma instância qualquer?
+
+Porém, o que também é interessante ao utilizar um algoritmo é a qualidade da solução encontrada para aquela instância. A razão $C/C^*$ não pode ser calculada, pois $C^*$ é desconhecido. Existem duas maneiras de interpretar a qualidade de uma solução:
 \begin{itemize}
-    \item \textbf{Algoritmos Exatos:} Exploram sistematicamente o espaço de busca até encontrar e comprovar matematicamente a solução ótima global ($C = C^*$). Contudo, para problemas NP-difíceis, exigem tempo exponencial ou fatorial no pior caso, tornando-se inviáveis para instâncias de grande escala.
-    \item \textbf{Algoritmo que apenas procura uma solução boa (Heurística):} Baseia-se na ``intuição'', em regras práticas ou em tentativas empíricas inteligentes para achar uma solução rápida e satisfatória. Contudo, ele \textbf{não oferece garantias formais}: sob uma determinada condição favorável, pode encontrar a solução perfeita; em outra configuração de dados, pode entregar uma solução péssima sem que o usuário tenha meios de perceber o prejuízo.
-    \begin{itemize}
-        \item \textit{Exemplo ilustrativo:} É equivalente a pedir uma recomendação de restaurante para um amigo. Geralmente a refeição será boa e você economizará tempo de pesquisa, mas não existe nenhuma garantia científica ou contratual de que aquele é o melhor custo-benefício da cidade ou de que o prato não virá ruim naquele dia.
-    \end{itemize}
-    \item \textbf{Algoritmo com garantia matemática de qualidade (Algoritmo de Aproximação):} Também busca soluções rápidas em tempo polinomial, mas é construído sobre propriedades matemáticas estritas que provam o quão próxima sua resposta está da solução ótima. O desenvolvedor conhece de antemão o \textbf{pior cenário possível}. Por exemplo, um algoritmo $2$-aproximado para um problema de minimização garante matematicamente que o custo final jamais ultrapassará o dobro do custo da solução ótima ($C \le 2 \cdot C^*$), não importa o quão difícil seja a instância.
-    \begin{itemize}
-        \item \textit{Exemplo ilustrativo:} É equivalente a contratar um serviço de logística expressa com cláusula contratual auditada que garante que, mesmo no pior cenário possível (trânsito intenso ou chuva), sua encomenda será entregue em no máximo 48 horas (sendo o tempo ideal de um voo dedicado igual a 24 horas). O usuário tem uma segurança previsível e um teto máximo de atraso garantido \cite{wikipedia_aprox, miyazawa_aprox, ziviani2011}.
-    \end{itemize}
+    \item \textbf{A garantia:} Sabendo que o algoritmo é uma $p$-aproximação, é de conhecimento, antes de executá-lo, que $C \le p\,C^*$ em minimização para qualquer instância; porém, esse é um limite superior para o pior caso — normalmente, a qualidade do algoritmo é melhor do que a indicada pelo valor $p$ \cite{cormen2012}.
+    \item \textbf{O certificado por limite:} Quando se obtém um limite inferior $\mathrm{LB} \le C^*$ para um problema de minimização, sabemos que a solução ótima está contida em $\mathrm{LB} \le C^* \le C$, onde $C$ é o custo de uma solução viável. Isso nos permite calcular uma razão específica para alguma instância: $\frac{C}{C^*} \le \frac{C}{\mathrm{LB}}$. Em maximização, o papel é invertido: com um limite superior $\mathrm{UB} \ge C^*$, tem-se que $C \le C^* \le \mathrm{UB}$ e $\frac{C^*}{C} \le \frac{\mathrm{UB}}{C}$. Em muitos problemas de otimização surgem dois tipos de limite: os baseados nas características estruturais da instância, como o emparelhamento na seção de cobertura de vértices \cite[Seção~35.1]{cormen2012}, e a relaxação linear do problema, em que variáveis inteiras passam a assumir valores fracionários. Como será visto na seção de garantia de aproximação, os mesmos limites sustentam as provas de garantia.
 \end{itemize}
 
-\section{Conceito de Razão de Aproximação e Interpretação da Qualidade}
+\textbf{Exemplo (minimização):} Suponha uma operação de logística que precisa encaixar $10$ caixas pequenas, que juntas pesam $250\text{ kg}$, em contêineres de $100\text{ kg}$. Sabemos que não há como encaixar em menos de $\lceil 250/100 \rceil = 3$ contêineres. Logo, sabemos que o limite inferior é no mínimo $3$. Caso algum algoritmo heurístico que encaixa rapidamente utilize $C = 4$ contêineres, então: $\frac{C}{C^*} \le \frac{C}{\mathrm{LB}} = \frac{4}{3} \approx 1{,}33$. Portanto, não é preciso testar todas as combinações para saber se $C^*$ é igual a $3$ ou a $4$. Esse certificado garante que a solução gasta no máximo $33\%$ a mais de contêineres do que o ótimo \cite{cormen2012}.
 
-Na Análise de Algoritmos, a \textbf{garantia de aproximação} (ou garantia formal de qualidade) é uma prova matemática rigorosa, estabelecida por meio de teoremas, que assegura um limite máximo para o erro de um algoritmo em qualquer cenário possível, independentemente do quão complexa ou atípica seja a entrada de dados.
+\textbf{Exemplo (maximização):} Suponha que a relaxação linear de um problema de cobertura de antenas diga que, dado um orçamento, o máximo de pessoas que podem ser atendidas é $1200$, ou seja, $\mathrm{UB} = 1200$. O algoritmo guloso retorna uma solução $C = 1000$. Ou seja, $\frac{C^*}{C} \le \frac{1200}{1000} = 1{,}2$, e a solução encontrada pelo algoritmo guloso atinge pelo menos $83\%$ do valor ótimo, sendo muito melhor que a garantia de pior caso de $1 - \frac{1}{e}$, de aproximadamente $63{,}2\%$ \cite{nemhauser1978}.
 
-Em sentido técnico e prático, dizer que uma solução é ``próxima da solução ideal'' significa que o algoritmo encontrou uma resposta viável e satisfatória em um tempo de execução aceitável, cujo custo $C$ está matematicamente limitado a uma pequena fração ou múltiplo do custo da solução ótima verdadeira $C^*$. 
-
-Formalmente, diz-se que um algoritmo possui um \textbf{fator (ou razão) de aproximação} $\alpha$ se, para qualquer instância do problema, o valor da solução entregue difere do valor ótimo por, no máximo, um fator $\alpha$. Por exemplo, em um problema de minimização, uma $\alpha$-aproximação com $\alpha = 1,5$ garante que o custo obtido será, no pior caso, apenas $50\%$ maior que o ideal ($C \le 1,5 \cdot C^*$). Dessa forma, sacrifica-se parcialmente a precisão absoluta para obter o melhor resultado comprovadamente próximo do ótimo sem incorrer em tempos exponenciais.
-
-\subsection{Demonstração por Meio de um Exemplo Simples}
-
+É importante ressaltar que o valor do certificado depende diretamente do valor do limite usado: um $\mathrm{LB}$ fraco produz um certificado pessimista, além de não ser possível determinar em que ponto está o ótimo no intervalo $[\mathrm{LB}, C]$. O que o certificado fornece é a maneira de dizer, para uma instância dada, a que distância no máximo a solução está do ótimo, mesmo sem conhecer $C^*$.
 \section{Definição do Problema de Cobertura de Vértices (Vertex Cover)}
+\label{sec:cobertura}
+
+Seja $G = (V,E)$ um grafo não dirigido. Uma cobertura de vértices de $G$ é um subconjunto $V' \subseteq V$ tal que, para toda aresta $(u,v) \in E$, temos $u \in V'$ ou $v \in V'$ (ou ambos). Em outras palavras, toda aresta do grafo possui pelo menos um de seus extremos na cobertura de vértices, e cada vértice ``cobre'' todas as arestas incidentes a ele. O problema da otimização consiste em determinar uma cobertura de vértices de tamanho mínimo \cite{cormen2012}.
+
+\begin{figure}[!ht]
+    \centering
+    \caption{Exemplo de grafo não dirigido com vértices $1, 2, 3, 4, 5, 6$ e arestas $12, 23, 34, 45, 56$.}
+    \label{fig:grafo-cobertura-vertices}
+
+    \vspace{0.2cm}
+    \includegraphics[width=0.65\linewidth]{figures/grafo-cobertura-vertices.png}
+    
+    \vspace{0.2cm}
+    \footnotesize{\textit{Fonte:} Elaborado pelos autores (2026)}.
+\end{figure}
+
+Por exemplo, no grafo da Figura~\ref{fig:grafo-cobertura-vertices}, o conjunto $V$ inteiro (de tamanho $6$) cobre as arestas $12, 23, 34, 45, 56$. Mas é possível fazer melhor: os vértices $2, 4, 5$ cobrem todas as cinco arestas usando apenas $3$ vértices. Já $\{2, 4\}$ não forma uma cobertura, pois a aresta $56$ não tem nenhum de seus extremos escolhido. Como as arestas $12, 34, 56$ não compartilham vértices, qualquer cobertura deve incluir ao menos três vértices, de modo que o tamanho mínimo é $3$.
+
+O problema de decisão associado (dado $k$, verificar se existe uma cobertura de tamanho $k$) é NP-completo, por redução ao problema do clique. Por consequência, a versão de otimização é NP-difícil, o que significa que não se espera um algoritmo exato em tempo polinomial (a menos que $P = NP$). A próxima seção apresenta um algoritmo de aproximação em tempo polinomial que encontra uma cobertura cujo tamanho é no máximo o dobro do tamanho mínimo. O problema de cobertura de vértices é um caso especial do problema da cobertura de conjuntos (\textit{Set Cover}): nele, os elementos são as arestas de $G$ e cada vértice corresponde ao conjunto formado pelas arestas incidentes a ele. Assim, cobrir todas as arestas com o mínimo de vértices é equivalente a cobrir todos os elementos com o mínimo de conjuntos. O que torna esse caso particular é que cada elemento (aresta) pertence a exatamente dois conjuntos (os correspondentes aos seus extremos).
 
 \section{Aplicação de um Algoritmo de Aproximação em um Pequeno Grafo}
+Um algoritmo de aproximação pertinente para a cobertura de vértices é o \textsc{Approx-Vertex-Cover}, utilizado na literatura de Cormen et al. \cite[Seção~35.1]{cormen2012}, que funciona da seguinte maneira: constrói a cobertura escolhendo uma aresta não coberta, em seguida insere os dois extremos na cobertura e repete o processo até que todas as arestas estejam cobertas, como mostra o Algoritmo~\ref{alg:approx-vc}:
+
+\begin{algorithm}[ht]
+\caption{\textsc{Approx-Vertex-Cover}$(G)$}
+\label{alg:approx-vc}
+\begin{algorithmic}[1]
+\STATE $C \gets \emptyset$
+\STATE $E' \gets E[G]$
+\WHILE{$E' \neq \emptyset$}
+    \STATE escolher uma aresta arbitrária $(u,v)$ de $E'$
+    \STATE $C \gets C \cup \{u,v\}$
+    \STATE remover de $E'$ toda aresta incidente em $u$ ou em $v$
+\ENDWHILE
+\RETURN $C$
+\end{algorithmic}
+\footnotesize{\textit{Fonte:} Elaborado pelos autores (2026)}
+\end{algorithm}
+
+Observe que qualquer aresta pode ser escolhida, pois a linha 4 não especifica qual selecionar, fazendo com que o resultado varie conforme a escolha. Já a linha 6 garante o progresso: ao inserir $u$ e $v$ em $C$, todas as arestas incidentes a eles deixam de ser consideradas, pois passam a estar cobertas. Em cada iteração, pelo menos a aresta escolhida é eliminada, e o tempo total de execução com listas de adjacência é $O(V + E)$.
+
+\textbf{Execução no grafo caminho.} Considerando novamente o grafo apresentado na seção anterior (Figura~\ref{fig:grafo-cobertura-vertices}), ele possui as arestas $12, 23, 34, 45, 56$ e sua cobertura ótima tem tamanho $3$. 
+
+\begin{figure}[!ht]
+    \centering
+    \caption{Representação visual das Execuções 1 e 2 do algoritmo \textsc{Approx-Vertex-Cover} no grafo caminho.}
+    \label{fig:execucoes-avc}
+
+    \vspace{0.2cm}
+    \includegraphics[width=0.65\linewidth]{figures/execucoes-approx-vc.png}
+    
+    \vspace{0.2cm}
+    \footnotesize{\textit{Fonte:} Elaborado pelos autores (2026)}.
+\end{figure}
+
+A Tabela~\ref{tab:execucoes-avc} mostra duas execuções do algoritmo, que se distinguem apenas na ordem em que as arestas são escolhidas na linha 4.
+
+\begin{table}[ht]
+\centering
+\caption{Traço de duas execuções do algoritmo \textsc{Approx-Vertex-Cover} no grafo caminho.}
+\label{tab:execucoes-avc}
+\begin{tabular}{cccll}
+\hline
+\textbf{Exec.} & \textbf{Passo} & \textbf{Aresta escolhida} & \textbf{$C$ após o passo} & \textbf{Removidas de $E'$} \\
+\hline
+1 & 1 & $12$ & $\{1, 2\}$ & $12, 23$ \\
+1 & 2 & $34$ & $\{1, 2, 3, 4\}$ & $34, 45$ \\
+1 & 3 & $56$ & $\{1, 2, 3, 4, 5, 6\}$ & $56$ \\
+\hline
+2 & 1 & $23$ & $\{2, 3\}$ & $12, 23, 34$ \\
+2 & 2 & $45$ & $\{2, 3, 4, 5\}$ & $45, 56$ \\
+\hline
+\end{tabular}
+\footnotesize{\textit{Fonte:} Elaborado pelos autores (2026)}
+\end{table}
+
+Na execução 1, são escolhidas as arestas na ordem $12, 34, 56$, e o resultado é $E'$ vazio e $C = \{1, 2, 3, 4, 5, 6\}$, com tamanho $6$. Na execução 2, a aresta $23$ é escolhida primeiro, o que já elimina $12$, $23$ e $34$; em seguida, a aresta $45$ é escolhida e elimina $45$ e $56$, o que resulta em $C = \{2, 3, 4, 5\}$, de tamanho $4$. Ambos os resultados são coberturas válidas de $G$, e sua qualidade em relação ao ótimo $C^* = 3$ é: execução 1 com razão $6/3 = 2$ e execução 2 com razão $4/3 \approx 1{,}33$.
+
+Note que o tamanho do conjunto retornado pelo algoritmo depende da ordem na qual as arestas são selecionadas. Além disso, o tamanho nunca será maior que $2 \times 3 = 6$, como será provado na seção de garantia de aproximação. Na execução 1 do algoritmo, é retornado exatamente o fator $2$, mostrando que essa razão não pode ser melhorada na análise desse algoritmo. A razão do fator $2$ é justificada pelo próprio funcionamento do método: sempre que uma aresta é selecionada, seus dois extremos são inseridos na solução. Assim, na execução 1, os vértices $1$, $3$ e $6$ são redundantes, enquanto a cobertura ótima $\{2, 4, 5\}$ seleciona apenas um vértice para cobrir essas arestas. É interessante observar que, em cada execução, as arestas selecionadas não têm extremos em comum, propriedade fundamental para a prova de garantia de aproximação. Cormen et al. \cite[Seção~35.1]{cormen2012} ilustram a execução desse algoritmo em um grafo de $7$ vértices e $8$ arestas, no qual é retornado um conjunto de $6$ vértices, enquanto a solução ótima retorna apenas $3$. A Figura~\ref{fig:execucoes-avc} ilustra visualmente o passo a passo dessas duas execuções.
+
+\begin{figure}[!ht]
+    \centering
+    \caption{Representação visual da execução do algoritmo \textsc{Approx-Vertex-Cover} em um grafo de $7$ vértices e $8$ arestas.}
+    \label{fig:cormen-avc}
+
+    \vspace{0.2cm}
+    \includegraphics[width=0.65\linewidth]{figures/execucao-cormen-7v-8a.png}
+    
+    \vspace{0.2cm}
+    \footnotesize{\textit{Fonte:} Adaptado de \cite[Figura~35.1]{cormen2012}}.
+\end{figure}
 
 \section{Explicação da Garantia de Aproximação do Algoritmo Utilizado}
+
+Como visto na seção anterior, uma garantia não pode comparar a solução encontrada ao ótimo da instância, pois este é desconhecido; em vez disso, ela compara a solução com o limite inferior do ótimo. A garantia do algoritmo \textsc{Approx-Vertex-Cover} segue a seguinte estratégia: o número de arestas selecionadas na linha~4 é o limite inferior. Em termos formais, trata-se de um teorema, e sua demonstração vale para qualquer instância, independentemente da ordem das escolhas das arestas \cite[Teorema~35.1]{cormen2012}.
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{proof}{Demonstração}
+
+\begin{theorem}\label{thm:approx-vc}
+O algoritmo {Approx-Vertex-Cover} é um algoritmo polinomial de $2$-aproximação.
+\end{theorem}
+
+\begin{proof}
+A prova tem $4$ passos. Seja $A$ o conjunto de arestas selecionadas na linha~4, $C$ a cobertura retornada e $C^*$ uma cobertura ótima:
+\begin{enumerate}
+    \item O algoritmo roda em tempo $O(V + E)$ (descrito na seção do algoritmo), ou seja, em tempo polinomial.
+    \item O laço somente acaba quando $E' = \emptyset$. Todas as arestas removidas de $E'$ possuem um extremo em $C$: por definição, a aresta escolhida, e as demais, por serem incidentes aos vértices que acabaram de entrar em $C$. Assim, todas as arestas em $E$ estão cobertas.
+    \item \textbf{Limite inferior:} Duas arestas em $A$ não compartilham extremos: assim, ao escolher $(u,v)$, a linha~6 elimina todas as arestas incidentes a $u$ ou a $v$ de $E'$; dessa forma, nenhuma futura aresta selecionada tocará esses vértices. Qualquer cobertura, em particular $C^*$, deve conter pelo menos um extremo de cada aresta de $A$. Como todos esses extremos são distintos, logo: $|C^*| \ge |A|$.
+    \item \textbf{Limite superior:} Em cada iteração, nenhuma extremidade da aresta escolhida já está em $C$; caso contrário, já teriam sido eliminadas de $E'$ nas iterações anteriores. Logo, cada iteração adiciona exatamente dois novos vértices a $C$; assim: $|C| = 2|A|$.
+\end{enumerate}
+
+Ao combinar essas duas desigualdades anteriores, temos:
+\begin{equation}\label{eq:garantia-vc}
+  |C| = 2|A| \le 2|C^*|, \quad \text{isto é,} \quad \frac{|C|}{|C^*|} \le 2 \text{ para cada instância.}
+\end{equation}
+\end{proof}
+
+A prova funciona sem conhecer $|C^*|$, pois a relação nunca usa o valor exato de $C^*$: usa apenas a informação de que $|A|$ é um limite inferior para ele. A razão entre a solução e o limite inferior é o que fornece a razão de aproximação \cite[Seção~35.1]{cormen2012}. É o mesmo raciocínio realizado para o certificado anteriormente aqui, agora considerado com um limite válido para qualquer grafo.
+
+No grafo caminho ilustrado na seção do algoritmo, a execução~1 retorna $6$ vértices, enquanto a solução ótima retorna $3$, o que atinge exatamente o fator $2$, pois a solução retornada pelo algoritmo é exatamente duas vezes maior que o ótimo. O mesmo fenômeno ocorre com qualquer grafo bipartido completo $K_{n,n}$: todo emparelhamento maximal vai ter $n$ arestas, o algoritmo retorna $2n$ vértices e o ótimo tem tamanho $n$. Logo, não é possível melhorar o fator $2$ na análise deste algoritmo.
+
+A garantia vale para qualquer grafo não dirigido, sem a necessidade de hipóteses adicionais sobre a estrutura da instância — diferentemente do TSP (\textit{Problema do Caixeiro Viajante}), no qual a garantia de aproximação depende da desigualdade triangular \cite[Seção~35.2]{cormen2012}.
