@@ -1,0 +1,85 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazilian}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{Introdução}{5}{chapter*.4}%
+\contentsline {part}{\partnumberline {I}\MakeTextUppercase []{Estratégias de Resolução e Busca}}{7}{part.1}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Problema do Caixeiro-Viajante e Algoritmos Gulosos}}{9}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Conceito, Definição e Representação do Problema do Caixeiro-Viajante}{9}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Representação por Meio de Grafos e Distâncias entre Cidades}{9}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}A Dificuldade Computacional de Encontrar a Rota Ótima}{9}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Introdução às Estratégias Heurísticas}{10}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Definição de Heurística na Computação}{10}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Principal Finalidade de Utilização}{11}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Garantia de Otimalidade da Solução}{11}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}Funcionamento de um Algoritmo Guloso Aplicado ao TSP}{12}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Etapas da Estratégia}{12}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Eficiência Computacional e Limitações da Escolha Gulosa}{12}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Exemplo Prático com Quatro Cidades}{13}{section.1.4}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Busca Local e Estudo de Caso no TSP}}{15}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Conceito de Busca Local}{15}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Funcionamento de Estratégias de Melhoria de Soluções}{15}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Exemplos de Operações de Troca ou Reorganização de Rotas}{15}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Aplicação de uma Estratégia de Busca Local ao Exemplo do TSP}{15}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Comparação entre a Solução Inicial e a Solução Após a Tentativa de Melhoria}{15}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Limitações das Estratégias de Busca Local}{15}{section.2.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{Algoritmos Exponenciais: Backtracking}}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Conceito de Backtracking}{17}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Funcionamento da Exploração do Espaço de Busca}{17}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Construção de uma Árvore de Possibilidades}{18}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Aplicação do Backtracking em um Problema Computacional}{18}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Apresentação de Pseudocódigo Simplificado}{19}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Discussão sobre o Custo Computacional e Crescimento Exponencial}{19}{section.3.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Algoritmos Exponenciais: Branch-and-Bound}}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Conceito de Branch-and-Bound}{21}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Funcionamento da Divisão do Espaço de Busca (Branching)}{21}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Conceito de Limites e Critérios de Poda (Bounding)}{22}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Aplicação da Estratégia em um Exemplo de Otimização}{22}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Apresentação de um Esquema ou Pseudocódigo Simplificado}{24}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Comparação entre Backtracking e Branch-and-Bound}{24}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Comparação Geral das Estratégias de Resolução e Busca (Parte I)}{25}{section.4.7}%
+\contentsline {part}{\partnumberline {II}\MakeTextUppercase []{Aproximação e Qualidade das Soluções}}{27}{part.2}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Algoritmos Aproximados e Cobertura de Vértices}}{29}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conceito de Algoritmo Aproximado}{29}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Diferença entre Algoritmos Exatos, Heurísticos e Aproximados}{29}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Conceito de Razão de aproximação}{30}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Interpretação da qualidade de uma solução aproximada}{32}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Definição do Problema de Cobertura de Vértices (Vertex Cover)}{33}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Aplicação de um Algoritmo de Aproximação em um Pequeno Grafo}{34}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Explicação da Garantia de Aproximação do Algoritmo Utilizado}{36}{section.5.7}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Algoritmos Aproximados para o TSP}}{39}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Dificuldades de Encontrar a Solução Ótima para o TSP}{39}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Diferença entre Encontrar uma Solução Viável e uma Solução Ótima}{39}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Apresentação de um Algoritmo Aproximado para o TSP}{40}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Demonstração do Funcionamento do Algoritmo em um Exemplo Pequeno}{40}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Explicação da Garantia de Aproximação Oferecida pelo Método}{40}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Condições Necessárias para a Validade da Garantia (Desigualdade Triangular no TSP Métrico)}{40}{section.6.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {7}\MakeTextUppercase []{Set Cover, Bin Packing e Comparação entre Estratégias}}{41}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Definição do Problema Set Cover}{41}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Definição do Problema Bin Packing}{41}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Exemplo de Aplicação de Estratégia Gulosa ou Aproximada}{42}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Funcionamento da Estratégia Gulosa de Custo-Benefício}{42}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Vantagem de Velocidade e Garantia de Qualidade}{43}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Exemplo Numérico Passo a Passo}{44}{subsection.7.3.3}%
+\contentsline {section}{\numberline {7.4}Comparação entre Heurísticas e Algoritmos Aproximados}{45}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Discussão sobre Qualidade das Soluções, Tempo de Execução e Garantias Teóricas}{45}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Vantagens do Uso de Heurísticas}{45}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Limitações do Uso de Heurísticas}{47}{subsection.7.5.2}%
+\contentsline {section}{\numberline {7.6}Identificação de Situações Mais Adequadas para Cada Estratégia no Mundo Real}{47}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}Situação 1: Organização Industrial e Escalonamento de Tarefas (\textit {Job Shop Scheduling})}{47}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}Situação 2: Roteamento de Veículos e Logística de Transporte (\textit {Vehicle Routing Problem -- VRP})}{48}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}Situação 3: Armazenamento e Computação em Nuvem (\textit {Bin Packing} e Problema da Mochila)}{48}{subsection.7.6.3}%
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{Considerações Finais}{51}{chapter*.11}%
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\MakeTextUppercase []{Refer\^encias Bibliogr\'aficas}}{53}{section*.15}%
