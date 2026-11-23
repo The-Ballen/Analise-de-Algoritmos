@@ -7,7 +7,30 @@
 
 \section{Definição do Problema Set Cover}
 
+O Problema de Cobertura de Conjuntos (\textit{Set Cover}) é um dos problemas clássicos da otimização combinatória e da teoria da complexidade computacional \cite{cormen2012}. Formalmente, dada uma coleção finita de elementos denominada universo $U = \{u_1, u_2, \dots, u_n\}$ e uma família de subconjuntos $\mathcal{S} = \{S_1, S_2, \dots, S_m\}$ com $S_i \subseteq U$ tal que a união de todos os subconjuntos cobre o universo ($\bigcup_{i=1}^{m} S_i = U$), o objetivo consiste em encontrar uma subfamília $\mathcal{C} \subseteq \mathcal{S}$ de \textbf{menor cardinalidade possível} cuja união ainda contenha todos os elementos de $U$:
+\begin{equation}
+    \bigcup_{S_i \in \mathcal{C}} S_i = U
+\end{equation}
+
+Em sua formulação ponderada (\textit{Weighted Set Cover}), cada subconjunto $S_i \in \mathcal{S}$ possui um custo associado $c_i > 0$, e busca-se a subfamília $\mathcal{C}$ que minimiza o custo total $\sum_{S_i \in \mathcal{C}} c_i$ garantindo a cobertura completa de $U$.
+
+Do ponto de vista computacional, o \textit{Set Cover} é comprovadamente \textbf{NP-difícil} (sua versão de decisão é NP-completa), o que significa que não se conhece algoritmo exato capaz de resolvê-lo em tempo polinomial para instâncias grandes \cite{cormen2012, ziviani2011}. Como alternativa prática, utiliza-se frequentemente uma abordagem gulosa que, a cada passo, seleciona o subconjunto que cobre a maior quantidade de elementos ainda não atendidos (ou o menor custo por elemento novo). Essa estratégia executa em tempo polinomial e possui razão de aproximação garantida pelo número harmônico $H(n) = \sum_{k=1}^{n} \frac{1}{k} \le \ln n + 1$ \cite{fernandes2021}. Quando há um limite rígido de orçamento que impede a cobertura total de $U$, o problema deriva para variantes como a Cobertura Máxima Orçada, explorada na seção seguinte.
+
 \section{Definição do Problema Bin Packing}
+
+O Problema de Empacotamento em Recipientes (\textit{Bin Packing}) consiste em alocar um conjunto de $n$ itens com tamanhos (ou pesos) $w_1, w_2, \dots, w_n$, onde $0 < w_i \le C$, dentro do \textbf{menor número possível de recipientes} (\textit{bins}) idênticos de capacidade $C$ \cite{goldbarg2005, miyazawa_aprox}. Em sua formulação normalizada padrão, adota-se $C = 1$ e $w_i \in (0, 1]$ para todo $i \in \{1, \dots, n\}$.
+
+Matematicamente, deseja-se particionar o conjunto de itens em $k$ subconjuntos disjuntos $B_1, B_2, \dots, B_k$, minimizando $k$ e respeitando a restrição de capacidade em cada recipiente:
+\begin{equation}
+    \sum_{i \in B_j} w_i \le C, \quad \forall j \in \{1, \dots, k\}
+\end{equation}
+
+Assim como o \textit{Set Cover}, o \textit{Bin Packing} pertence à classe dos problemas \textbf{NP-difíceis}, tornando a busca exaustiva por todas as partições inviável mesmo para dezenas de itens. Na prática, empregam-se algoritmos gulosos e de aproximação eficientes, tais como:
+\begin{itemize}
+    \item \textbf{\textit{First-Fit} (FF):} percorre os itens na ordem de chegada e insere cada um no primeiro recipiente já aberto que comporte seu tamanho; caso nenhum tenha espaço suficiente, abre-se um novo recipiente.
+    \item \textbf{\textit{Best-Fit} (BF):} insere o item atual no recipiente já aberto que deixará a menor folga residual após a alocação, reduzindo o desperdício de espaço.
+    \item \textbf{\textit{First-Fit Decreasing} (FFD):} ordena previamente os itens em ordem decrescente de tamanho ($w_1 \ge w_2 \ge \dots \ge w_n$) e aplica a regra \textit{First-Fit}. Essa ordenação prévia evita que itens grandes fiquem sem espaço no final do processo, alcançando complexidade $O(n \log n)$ e garantindo um número de recipientes muito próximo do ótimo teórico, conforme discutido nas aplicações em computação em nuvem ao final deste capítulo.
+\end{itemize}
 
 \section{Exemplo de Aplicação de Estratégia Gulosa ou Aproximada}
 
@@ -43,6 +66,44 @@ Para mensurar a eficiência prática e teórica da solução encontrada pelo sis
 \end{itemize}
 
 \subsection{Exemplo Numérico Passo a Passo}
+
+Para ilustrar a execução da estratégia gulosa de custo-benefício, considere uma pequena região com $10$ moradores, representada pelo universo $U = \{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}$, e um orçamento total disponível $B = 95$ unidades monetárias (u.m.). Há $4$ locais candidatos para instalação de antenas, com os respectivos conjuntos de cobertura e custos:
+\begin{itemize}
+    \item \textbf{Local 1:} $S_1 = \{1, 2, 3, 4, 5\}$ ($5$ moradores), custo $c_1 = 45$ u.m.
+    \item \textbf{Local 2:} $S_2 = \{4, 5, 6, 7\}$ ($4$ moradores), custo $c_2 = 30$ u.m.
+    \item \textbf{Local 3:} $S_3 = \{6, 7, 8, 9, 10\}$ ($5$ moradores), custo $c_3 = 50$ u.m.
+    \item \textbf{Local 4:} $S_4 = \{1, 8, 9\}$ ($3$ moradores), custo $c_4 = 20$ u.m.
+\end{itemize}
+
+\textbf{Inicialização:} Inicia-se com o conjunto de moradores atendidos vazio ($C = \emptyset$) e orçamento restante $B_{\text{rest}} = 95$.
+
+\begin{enumerate}
+    \item \textbf{Iteração 1:} Calculam-se as razões $R_i = \frac{|S_i \setminus C|}{c_i}$ para todos os locais:
+    \begin{itemize}
+        \item $R_1 = 5 / 45 \approx 0{,}111$
+        \item $R_2 = 4 / 30 \approx 0{,}133$
+        \item $R_3 = 5 / 50 = 0{,}100$
+        \item $R_4 = 3 / 20 = \mathbf{0{,}150}$ (maior razão)
+    \end{itemize}
+    Como $c_4 = 20 \le 95$, seleciona-se o \textbf{Local 4}. Atualiza-se $C = \{1, 8, 9\}$ ($3$ moradores) e $B_{\text{rest}} = 95 - 20 = 75$.
+
+    \item \textbf{Iteração 2:} Recalcula-se o ganho marginal descontando os moradores já presentes em $C$:
+    \begin{itemize}
+        \item $S_1 \setminus C = \{2, 3, 4, 5\} \implies R_1 = 4 / 45 \approx 0{,}089$
+        \item $S_2 \setminus C = \{4, 5, 6, 7\} \implies R_2 = 4 / 30 \approx \mathbf{0{,}133}$ (maior razão)
+        \item $S_3 \setminus C = \{6, 7, 10\} \implies R_3 = 3 / 50 = 0{,}060$
+    \end{itemize}
+    Como $c_2 = 30 \le 75$, seleciona-se o \textbf{Local 2}. Atualiza-se $C = \{1, 4, 5, 6, 7, 8, 9\}$ ($7$ moradores) e $B_{\text{rest}} = 75 - 30 = 45$.
+
+    \item \textbf{Iteração 3:} Avaliam-se os locais restantes para $B_{\text{rest}} = 45$:
+    \begin{itemize}
+        \item $S_1 \setminus C = \{2, 3\} \implies R_1 = 2 / 45 \approx \mathbf{0{,}044}$ (maior razão)
+        \item $S_3 \setminus C = \{10\} \implies R_3 = 1 / 50 = 0{,}020$
+    \end{itemize}
+    Como $c_1 = 45 \le 45$, seleciona-se o \textbf{Local 1}. Atualiza-se $C = \{1, 2, 3, 4, 5, 6, 7, 8, 9\}$ ($9$ moradores) e $B_{\text{rest}} = 45 - 45 = 0$.
+\end{enumerate}
+
+\textbf{Análise do Resultado:} Com o orçamento esgotado, o algoritmo encerra escolhendo os locais $\{S_4, S_2, S_1\}$, cobrindo \textbf{9 de 10 moradores ($90\%$)} ao custo efetivo de $95 / 9 \approx 10{,}56$ u.m. por pessoa. Note-se que a escolha inicial do Local 4 impediu a combinação ótima $\{S_1, S_3\}$, que custaria os mesmos $45 + 50 = 95$ u.m. e cobriria todos os \textbf{10 moradores ($100\%$)}. Ainda assim, a solução gulosa atingiu $90\%$ do ótimo global, superando com folga a garantia teórica mínima de $(1 - 1/e) \approx 63{,}2\%$.
 
 \section{Comparação entre Heurísticas e Algoritmos Aproximados}
 
