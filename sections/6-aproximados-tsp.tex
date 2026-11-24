@@ -6,21 +6,408 @@
 \chapter{Algoritmos Aproximados para o TSP}
 
 \section{Dificuldades de Encontrar a Solução Ótima para o TSP}
+\label{sec:dificuldades-tsp}
+
+Encontrar a rota ótima do Problema do Caixeiro-Viajante
+(\textit{Traveling Salesman Problem} -- TSP) é um problema de teoria dos
+grafos e de otimização combinatória. O número de circuitos hamiltonianos
+distintos em uma instância com $n$ cidades é
+\begin{equation}
+	N(n) \;=\; \frac{(n-1)!}{2}.
+	\label{eq:espaco-busca}
+\end{equation}
+
+A contagem justifica-se em dois passos. Partindo de $n!$ permutações das
+cidades, fixar uma cidade como origem reduz o total a $(n-1)!$, pois o
+circuito não tem começo definido. Em seguida, dividir por $2$ elimina a
+dupla contagem: cada rota pode ser percorrida em dois sentidos, e ambos
+descrevem o mesmo circuito. Esse espaço de busca cresce fatorialmente, ou
+seja, mais rápido que qualquer função exponencial $c^{n}$, como mostra a
+Tabela~\ref{tab:crescimento-fatorial}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Crescimento do número de circuitos hamiltonianos distintos}
+	\label{tab:crescimento-fatorial}
+	\begin{tabular}{p{2.6cm}p{4.4cm}p{3.4cm}}
+	\hline
+	\textbf{$n$ (cidades)} & \textbf{$N(n) = (n-1)!/2$} & \textbf{Ordem de grandeza} \\
+	\hline
+	5  & 12                          & $10^{1}$  \\
+	10 & 181\,440                    & $10^{5}$  \\
+	15 & 43\,589\,145\,600           & $10^{10}$ \\
+	20 & 60\,822\,550\,204\,416\,000 & $10^{16}$ \\
+	25 & $3{,}10 \times 10^{23}$     & $10^{23}$ \\
+	30 & $4{,}42 \times 10^{30}$     & $10^{30}$ \\
+	\hline
+\end{tabular}
+
+\vspace{0.15cm}
+\parbox{10.4cm}{\footnotesize\textit{Fonte:} Elaborada pelos autores (2026)}
+\end{table}
+
+Contudo, esse argumento não demonstra que o TSP é intratável: demonstra que
+a busca cega não escala. É exatamente nesse espaço que os algoritmos
+aproximados atuam, e por isso um \textit{tour} isolado não constitui
+certificado de otimalidade. Provar que uma solução é ótima exige um limite
+inferior que nenhuma solução viável possa violar, e é essa distância até o
+piso que define o \emph{gap} de otimalidade. É o \emph{gap}, e não a
+enumeração, que permite podar o espaço de busca.
+
+Em 1972, Richard Karp provou que a versão de decisão do TSP é
+$\mathcal{NP}$-completa \cite{karp1972}, o que torna sua versão de
+otimização $\mathcal{NP}$-difícil. Uma solução em tempo polinomial para o
+problema implicaria $\mathrm{P} = \mathrm{NP}$, o que decidiria um dos sete
+Problemas do Milênio, para o qual o Clay Mathematics Institute concede o
+prêmio de US\$\,1 milhão \cite{cook2000}.
 
 \section{Diferença entre Encontrar uma Solução Viável e uma Solução Ótima}
 
 Em uma operação logística real envolvendo o Problema do Caixeiro-Viajante, \textbf{uma rota viável e suficientemente boa (subótima) atende perfeitamente à necessidade da empresa}, não sendo necessário (e muitas vezes nem desejável) aguardar pela melhor rota absoluta possível (solução ótima). Essa diferença prática entre buscar apenas uma solução viável de boa qualidade e exigir a solução ótima justifica-se por três fatores fundamentais:
 
 \begin{enumerate}
-    \item \textbf{Restrição de tempo de resposta (\textit{Time-to-Decision}):} Uma transportadora precisa despachar seus veículos diariamente logo após o fechamento dos pedidos. É muito mais vantajoso utilizar um método rápido que leva 2 segundos para encontrar uma rota apenas $2\%$ ou $3\%$ mais longa do que a ideal, do que paralisar a frota por horas ou dias aguardando que o servidor calcule uma economia irrisória de poucos quilômetros.
-    \item \textbf{Dinamismo e incerteza do ambiente real:} O mundo físico não é estático. A ``rota matematicamente perfeita'' calculada no escritório pode rapidamente se tornar a pior opção na prática devido a variáveis imprevisíveis, como acidentes de trânsito, congestionamentos repentinos, condições climáticas adversas, obras na pista ou atrasos no recebimento da mercadoria pelo cliente.
-    \item \textbf{Retorno financeiro decrescente:} O custo computacional e de infraestrutura de TI (energia elétrica, servidores de alto desempenho e tempo de processamento) exigido para refinar uma solução de $98\%$ de eficiência para $100\%$ de eficiência frequentemente supera o valor financeiro do combustível que seria economizado naquele pequeno trecho otimizado.
+		\item \textbf{Restrição de tempo de resposta (\textit{Time-to-Decision}):} Uma transportadora precisa despachar seus veículos diariamente logo após o fechamento dos pedidos. É muito mais vantajoso utilizar um método rápido que leva 2 segundos para encontrar uma rota apenas $2\%$ ou $3\%$ mais longa do que a ideal, do que paralisar a frota por horas ou dias aguardando que o servidor calcule uma economia irrisória de poucos quilômetros.
+		\item \textbf{Dinamismo e incerteza do ambiente real:} O mundo físico não é estático. A ``rota matematicamente perfeita'' calculada no escritório pode rapidamente se tornar a pior opção na prática devido a variáveis imprevisíveis, como acidentes de trânsito, congestionamentos repentinos, condições climáticas adversas, obras na pista ou atrasos no recebimento da mercadoria pelo cliente.
+		\item \textbf{Retorno financeiro decrescente:} O custo computacional e de infraestrutura de TI (energia elétrica, servidores de alto desempenho e tempo de processamento) exigido para refinar uma solução de $98\%$ de eficiência para $100\%$ de eficiência frequentemente supera o valor financeiro do combustível que seria economizado naquele pequeno trecho otimizado.
 \end{enumerate}
 
 \section{Apresentação de um Algoritmo Aproximado para o TSP}
 
-\section{Demonstração do Funcionamento do Algoritmo em um Exemplo Pequeno}
+O algoritmo de Christofides resolve o caixeiro-viajante na versão em que as
+distâncias obedecem à desigualdade triangular: ir de uma cidade a outra
+diretamente nunca custa mais do que passar por uma terceira no caminho. A
+promessa é precisa: a rota devolvida custa no máximo uma vez e meia a rota
+ótima, ou seja, nunca mais de 50\% acima do melhor possível. É uma garantia
+para o pior caso, e não uma média observada. Vale apenas nesse cenário, pois
+sem a desigualdade triangular nenhum método consegue garantir erro limitado.
+Publicado em 1976 \cite{christofides1976}. O procedimento pode ser dividido em 
+quatro etapas.
 
-\section{Explicação da Garantia de Aproximação Oferecida pelo Método}
+\begin{enumerate}
+	\item \textbf{Montar a árvore mais barata.} Ligam-se todas as cidades pelo
+	menor custo total, sem formar nenhum ciclo. O resultado tem sempre uma
+	ligação a menos que o total de cidades. Como a rota ótima passa por todas
+	elas, basta apagar uma de suas ligações para obter uma árvore válida; logo a
+	árvore mais barata custa, no máximo, a rota ótima:
+	\begin{equation}
+		c(T) \;\leq\; c(H^{*}),
+		\label{eq:cota-arvore}
+	\end{equation}
+	em que $H^{*}$ designa a rota ótima. Essa é a primeira das duas referências
+	usadas no final.
 
-\section{Condições Necessárias para a Validade da Garantia (Desigualdade Triangular no TSP Métrico)}
+	\item \textbf{Separar as cidades com número ímpar de ligações.} Numa árvore,
+	as cidades das pontas têm uma ligação; as de passagem podem ter três. Essas
+	cidades são o problema, porque uma rota fechada exige número par de ligações
+	em cada cidade. Elas são sempre em quantidade par, e isso não é coincidência:
+	somando as ligações de todas as cidades obtém-se o dobro do número de
+	arestas, um valor par; como as cidades de número par já somam par, as ímpares
+	também precisam somar par, o que só acontece com uma quantidade par delas.
+	Sem esse detalhe, a etapa seguinte não teria solução.
+
+	\item \textbf{Parear essas cidades pelo menor custo.} Ligam-se as cidades
+	marcadas duas a duas, formando pares, pela combinação mais barata. O ponto
+	que quase sempre se explica errado: o cálculo usa as distâncias entre todas
+	elas, e não apenas as ligações que já existem na árvore. Se fossem usadas só
+	as ligações da árvore, o desenho poderia ficar desconexo e alguns pares
+	seriam impossíveis. Quanto ao custo: percorrendo a rota ótima e olhando
+	apenas as cidades marcadas, sobra um caminho fechado que se divide em dois
+	pareamentos alternados; o mais barato dos dois custa no máximo metade desse
+	caminho, que por sua vez não é maior que a rota ótima. Como se escolheu o
+	pareamento mais barato possível:
+	\begin{equation}
+		c(M) \;\leq\; \frac{c(H^{*})}{2}.
+		\label{eq:cota-pareamento}
+	\end{equation}
+	Essa é a segunda referência.
+
+	\item \textbf{Juntar as duas partes e cortar as repetições.} Somam-se as
+	ligações da árvore e as do pareamento. Toda cidade passa a ter número par de
+	ligações: as ímpares ganharam exatamente uma ligação nova, as demais já
+	estavam certas. Com todas as cidades em número par, existe um trajeto fechado
+	que usa cada ligação exatamente uma vez, o circuito euleriano. Ele pode,
+	porém, passar várias vezes pela mesma cidade, e isso não serve como resposta.
+	A solução é saltar: ao chegar a uma cidade já visitada, vai-se direto para a
+	próxima inédita. Pela desigualdade triangular, o atalho nunca custa mais caro
+	do que o desvio que substitui. Somando as duas referências anteriores:
+	\begin{equation}
+		c(H) \;\leq\; c(T) + c(M)
+		\;\leq\; c(H^{*}) + \frac{c(H^{*})}{2}
+		\;=\; \frac{3}{2}\,c(H^{*}),
+		\label{eq:fator-christofides}
+	\end{equation}
+	em que $c(H)$ é o custo da rota devolvida.
+\end{enumerate}
+
+A Equação~\eqref{eq:fator-christofides} é o teorema: o fator de uma vez e meia
+nasce da soma de duas referências independentes, o ótimo inteiro vindo da
+árvore e metade do ótimo vindo do pareamento.
+
+Duas ressalvas importam. A primeira é que a garantia depende da desigualdade
+triangular; sem ela, aproximar o TSP por qualquer constante equivaleria a
+resolver um problema NP-completo, o que ninguém sabe fazer em tempo aceitável.
+A segunda é que garantia não é desempenho: métodos de busca local sem
+certificação alguma costumam entregar rotas mais curtas em instâncias reais. O
+Christofides é a melhor garantia demonstrável, não o melhor resultado obtido.
+
+\section{Apresentação do algoritmo de Christofides}
+\label{sec:christofides}
+
+O Algoritmo~\ref{alg:christofides} formaliza as quatro etapas. A notação
+empregada é a seguinte: $A_T$ designa o conjunto de arestas da árvore geradora
+mínima; $d_T(v)$ é o grau do vértice $v$ em $T$; $G_0$ é o subgrafo
+\emph{induzido} pelas cidades de grau ímpar; e $\uplus$ denota união de
+multiconjuntos, pois $T$ e $E$ podem conter arestas com os mesmos extremos.
+
+\begin{algorithm}[ht]
+	\caption{\textsc{Christofides}$(G)$}
+	\label{alg:christofides}
+	\noindent\textbf{Entrada:} grafo completo $G = (V, A)$ com custos métricos $c$\\
+	\noindent\textbf{Saída:} circuito hamiltoniano $H$
+	\begin{algorithmic}[1]
+	\STATE $H \gets \emptyset$
+	\STATE determine $T = (V, A_T)$, uma árvore geradora mínima de $G$
+	\STATE defina $G_0 = (V_0, A_0)$, em que $V_0$ é o conjunto de vértices de $T$
+	que possuem grau ímpar e $A_0 = \{\{i,j\} \in A \mid i,j \in V_0\}$
+	\STATE determine $E$, o emparelhamento perfeito de custo mínimo em $G_0$
+	\STATE faça $G' = (V, A_T \uplus E)$
+	\STATE determine um ciclo euleriano $L$ em $G'$
+	\STATE \COMMENT{Twice-Around}
+	\WHILE{$L \neq \emptyset$}
+	\STATE escolher sequencialmente $l_k \in L$
+	\STATE \textbf{se} $l_k \notin H$ \textbf{então} $H \gets H \cup \{l_k\}$
+	\STATE $L \gets L \setminus \{l_k\}$
+	\ENDWHILE
+	\end{algorithmic}
+	\footnotesize{\textit{Fonte:} Carvalho (2019)}
+\end{algorithm}
+
+\section{Aplicação do algoritmo a um grafo pequeno}
+\label{sec:aplicacao-christofides}
+
+A instância da Figura~\ref{fig:exemplo-christofides} tem cinco cidades: uma no
+centro e quatro nos cantos de um quadrado. Chamemos a do centro de $A$, as duas
+de cima de $E$ e $D$, e as duas de baixo de $C$ e $B$. Cada canto dista $1$ do
+centro, os quatro lados do quadrado também medem $1$, e as duas diagonais medem
+$2$. Todas as ligações existem, e a Tabela~\ref{tab:distancias-quadrado} resume
+as distâncias.
+
+A instância respeita a desigualdade triangular, mas com um detalhe que define
+todo o comportamento do algoritmo: nas diagonais a igualdade é exata, porque
+$2 = 1 + 1$. Toda vez que um atalho trocar duas ligações de custo $1$ por uma de
+custo $2$, não haverá economia alguma. Isso ficará visível na etapa 6.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Distâncias entre as cinco cidades do exemplo.}
+	\label{tab:distancias-quadrado}
+	\begin{tabular}{cccccc}
+	\hline
+	& \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E} \\
+	\hline
+	\textbf{A} & --- & 1 & 1 & 1 & 1 \\
+	\textbf{B} & 1 & --- & 1 & 1 & 2 \\
+	\textbf{C} & 1 & 1 & --- & 2 & 1 \\
+	\textbf{D} & 1 & 1 & 2 & --- & 1 \\
+	\textbf{E} & 1 & 2 & 1 & 1 & --- \\
+	\hline
+	\end{tabular}
+	\footnotesize{\textit{Fonte:} Elaborada pelos autores (2026)}
+\end{table}
+
+\textbf{Etapa 1 --- a árvore mais barata.} Existem oito ligações de custo $1$ e
+duas de custo $2$. Pegando da mais barata para a mais cara e recusando as que
+fecham ciclo, ficam as quatro ligações do centro aos cantos. Com quatro
+ligações, as cinco cidades já estão conectadas e o processo para. O custo é $4$.
+
+\textbf{Etapa 2 --- cidades com número ímpar de ligações.} O centro tem quatro
+ligações; cada canto tem uma. O conjunto procurado é formado pelos quatro
+cantos, em quantidade par, como o método exige. O centro fica de fora.
+
+\textbf{Etapa 3 --- o pareamento mais barato.} Olhando apenas os quatro cantos,
+com todas as distâncias entre eles disponíveis e não apenas as ligações usadas
+na árvore, restam os quatro lados e as duas diagonais. Há três maneiras de
+formar pares, comparadas na Tabela~\ref{tab:emparelhamentos-quadrado}. Duas
+empatam no menor custo, $2$; a terceira, a única que usa as diagonais, custa o
+dobro. O exemplo adota o par de lados opostos.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Maneiras de parear os quatro cantos}
+	\label{tab:emparelhamentos-quadrado}
+	\begin{tabular}{p{1.5cm}p{3.0cm}p{2.6cm}p{3.2cm}}
+		\hline
+		\textbf{Opção} & \textbf{Pares formados} & \textbf{Custo} & \textbf{Situação} \\
+		\hline
+		1 & E--D e C--B & 2 & menor custo \\
+		2 & E--C e D--B & 2 & menor custo \\
+		3 & E--B e D--C & 4 & mais caro \\
+		\hline
+		\multicolumn{4}{c}{\footnotesize\textit{Fonte:} Elaborada pelos autores (2026).} \\
+	\end{tabular}
+\end{table}
+
+A lição da tabela: a opção mais cara é justamente a que usa as duas ligações de
+custo $2$. O pareamento busca a soma menor, e não a ligação individual mais
+barata.
+
+\textbf{Etapa 4 --- juntar as duas partes.} Somando as quatro ligações da árvore
+com as duas do pareamento, chega-se a seis ligações e custo total $6$. Como
+nenhuma ligação do pareamento coincide com uma da árvore, não há nada a contar
+duas vezes. O centro passa a ter quatro ligações e cada canto tem duas: todos em
+número par.
+
+\textbf{Etapa 5 --- percorrer tudo uma vez.} Com todos em número par, existe um
+trajeto fechado que usa cada ligação exatamente uma vez. Um trajeto possível é
+$A \to D \to E \to A \to B \to C \to A$, que custa $6$. Note que a cidade $A$
+aparece três vezes.
+
+\textbf{Etapa 6 --- cortar as repetições.} Ao chegar a $E$, o próximo destino é
+$A$, já visitada. O percurso segue direto para a cidade inédita seguinte, $B$,
+resultando em $A \to D \to E \to B \to C \to A$, com custo $6$.
+
+Aqui está o resultado mais instrutivo do capítulo: \textbf{o atalho não trouxe
+economia nenhuma}. O desvio eliminado custava $1+1=2$, e a ligação direta custa
+os mesmos $2$. É a igualdade exata na desigualdade triangular.
+
+\textbf{Comparação com a melhor rota.} Testando as doze rotas possíveis, a mais
+barata custa $5$, por exemplo $A \to B \to C \to E \to D \to A$, usando cinco
+ligações de custo $1$. O algoritmo entregou $6$, ou seja, vinte por cento acima
+do melhor possível, dentro do limite de cinquenta por cento.
+
+\textbf{A ordem do trajeto importa.} O trajeto alternativo
+$A \to E \to D \to A \to B \to C \to A$ é igualmente válido. Ao chegar a $D$,
+salta-se $A$ e vai-se direto a $B$, obtendo $A \to E \to D \to B \to C \to A$,
+com custo $5$, igual ao melhor possível. Nesse caso o atalho substituiu um desvio
+de custo $2$ por uma ligação de custo $1$ e produziu economia real. Duas
+execuções do mesmo algoritmo, na mesma instância, diferem em vinte por cento
+apenas pela ordem em que o trajeto é percorrido. A garantia de uma vez e meia
+cobre a pior delas, nunca a melhor.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Traço da execução no exemplo das cinco cidades.}
+	\label{tab:traco-quadrado}
+	\begin{tabular}{p{1.4cm}p{5.6cm}p{4.6cm}}
+	\hline
+	\textbf{Etapa} & \textbf{O que é construído} & \textbf{Resultado} \\
+	\hline
+	1 & Árvore mais barata & A--B, A--C, A--D, A--E \\
+	2 & Cidades com ligações ímpares & B, C, D, E \\
+	3 & Pareamento mais barato & E--D e C--B \\
+	4 & Soma das duas partes & 6 ligações, todas em número par \\
+	5 & Trajeto sem repetir ligação & A D E A B C A \\
+	6 & Rota final & A D E B C A \\
+	\hline
+	Ref. & Melhor rota possível & A B C E D A \\
+	\hline
+\end{tabular}
+
+\vspace{0.15cm}
+\parbox{12.8cm}{\footnotesize\textit{Fonte:} Elaborada pelos autores (2026)}
+\end{table}
+
+A Figura~\ref{fig:exemplo-christofides} reproduz as oito etapas do procedimento,
+da instância inicial à rota final.
+
+\begin{figure}[!ht]
+		\centering
+		\caption{Etapas do algoritmo de Christofides no exemplo de cinco cidades.}
+		\label{fig:exemplo-christofides}
+		\vspace{0.2cm}
+		\makebox[\linewidth][c]{%
+				\hspace*{-0.5cm}%
+				\includegraphics[width=1.15\linewidth]{figures/christofides-quadrado.png}%
+		}
+		\vspace{0.2cm}
+		\footnotesize{\textit{Fonte:} Adaptada de Wikipédia (2026)}.
+\end{figure}
+\section{Explicação da garantia de aproximação oferecida pelo método}
+\label{sec:garantia-christofides}
+
+A garantia é uma frase: a rota devolvida custa, no pior caso, uma vez e meia a
+melhor rota possível. Como a melhor rota da instância é desconhecida, a
+comparação usa a árvore mais barata, uma referência que obrigatoriamente custa
+menos que a ótima e cujo valor está calculado.
+
+A demonstração tem quatro partes. Primeiro, o método termina depressa: a tarefa
+mais pesada é o pareamento, que cresce com o cubo do número de cidades. Segundo,
+a resposta é uma rota de verdade: depois da etapa 4 toda cidade tem número par de
+ligações, o que garante o trajeto fechado, e os atalhos da etapa 6 cortam as
+repetições sem alterar a ordem de visita. Terceiro, as duas referências valem
+para qualquer instância: apagar uma ligação da melhor rota produz uma árvore, e
+restringir a melhor rota às cidades de número ímpar deixa um caminho fechado que
+se divide em dois pareamentos alternados, sendo o mais barato deles no máximo
+metade. Quarto, o custo final é a soma das duas partes sem perda, porque os
+atalhos nunca encarecem o percurso e a desigualdade triangular impede que o
+caminho direto custe mais que o desvio. Juntando as duas referências:
+\begin{equation}
+	c(H) \;\leq\; c(T) + c(M)
+	\;\leq\; c(H^{*}) + \frac{c(H^{*})}{2}
+	\;=\; \frac{3}{2}\,c(H^{*}),
+	\label{eq:garantia-restabelecida}
+\end{equation}
+em que $c(H)$ é o custo da rota devolvida, $c(T)$ o da árvore, $c(M)$ o do
+pareamento e $c(H^{*})$ o da melhor rota possível.
+
+O ponto central costuma passar em branco: a demonstração nunca usa o valor da
+melhor rota, apenas o fato de que a árvore e o pareamento custam, cada um, no
+máximo uma fração dela. É por isso que a garantia vale para toda instância
+métrica. Mesmo raciocínio do certificado por limite da Seção~\ref{sec:qualidade}.
+
+Vale separar garantia de resultado. A cota descreve o pior caso, e o pior caso é
+raro: no exemplo da Seção~\ref{sec:aplicacao-christofides}, a rota custou $6$
+contra $5$ da melhor possível, vinte por cento acima, embora o limite permitisse
+chegar a $7{,}50$.
+
+\section{Condições necessárias para a validade da garantia}
+\label{sec:condicoes-garantia}
+
+O fator de uma vez e meia depende de três características da instância. A falta
+de qualquer uma derruba a demonstração.
+
+A primeira é a \textbf{desigualdade triangular}, usada em um único ponto: na
+etapa 6, ao afirmar que o atalho não encarece o percurso. Sem ela, o atalho pode
+devolver rota mais longa e a conta desmonta. E não se trata de um limite pior:
+sem a desigualdade, aproximar o problema por qualquer fator fixo equivaleria a
+resolver um problema NP-completo, ou seja, não existe limite algum. Isso exige
+distâncias euclidianas, de quarteirão ou tempos de viagem consistentes.
+
+A segunda é a \textbf{simetria}: ir e voltar custa o mesmo. O pareamento é feito
+sobre distâncias sem orientação, de modo que mão única, ladeiras e rios exigem
+outra formulação, com limite pior.
+
+A terceira é ter \textbf{todas as ligações disponíveis}. A etapa 3 usa as
+distâncias do problema, e não as da árvore; com caminhos bloqueados entre as
+cidades ímpares, o pareamento pode não existir.
+
+\begin{table}[!ht]
+\centering
+\caption{As três condições exigidas pela garantia e o efeito da ausência de cada uma.}
+\label{tab:condicoes-garantia}
+\begin{tabular}{p{4.2cm}p{4.6cm}p{4.8cm}}
+\hline
+\textbf{Condição} & \textbf{Onde o algoritmo usa} & \textbf{O que acontece sem ela} \\
+\hline
+Desigualdade triangular & Etapa 6, ao cortar as repetições & O atalho pode encarecer o percurso e a garantia deixa de valer \\
+\hline
+Distâncias simétricas & Etapa 3, no pareamento entre pares & É preciso outra formulação, e o limite garantido piora \\
+\hline
+Todas as ligações disponíveis & Etapa 3, ao parear as cidades ímpares & O pareamento pode não existir e o método para \\
+\hline
+\end{tabular}
+
+\vspace{0.15cm}
+\parbox{8.4cm}{\footnotesize\textit{Fonte:} Elaborada pelos autores (2026).}
+\end{table}
+
+Em mapa de ruas a terceira condição quase nunca vale, porque a malha é esparsa.
+O procedimento usual calcula, para cada par de pontos, o caminho mais curto na
+malha real e passa a trabalhar com essas distâncias: o mapa fica completo e
+métrico por construção, sem usar trechos inexistentes. Um cuidado frequente:
+arredondar distâncias para inteiros pode quebrar a desigualdade por uma unidade
+($1{,}4$ e $1{,}4$ viram $1$ e $1$, somando $2$, enquanto $2{,}8$ vira $3$).
+Arredondar para cima preserva a garantia.
+
+Cumpridas as três, o limite é justo: existem instâncias em que o algoritmo chega
+perto dele, como discutido na Seção~\ref{sec:garantia-christofides}.
