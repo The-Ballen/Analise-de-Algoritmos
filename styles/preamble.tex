@@ -46,3 +46,22 @@
 
 % Controle do espaçamento entre um parágrafo e outro:
 \setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% Serve para ajudar a lê o código
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}   % necessário para \rowcolor nas tabelas
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% palavras-chave do algoritmo em português
+\algrenewtext{If}[1]{\textbf{se} #1 \textbf{então}}
+\algrenewtext{EndIf}{\textbf{fim se}}
+\algrenewtext{For}[1]{\textbf{para} #1 \textbf{faça}}
+\algrenewtext{EndFor}{\textbf{fim para}}
+\algrenewtext{Procedure}[2]{\textbf{procedimento} \textproc{#1}(#2)}
+\algrenewtext{EndProcedure}{\textbf{fim procedimento}}
+\algrenewtext{Function}[2]{\textbf{função} \textproc{#1}(#2)}
+\algrenewtext{EndFunction}{\textbf{fim função}}
+\algrenewcommand\algorithmicreturn{\textbf{retornar}}
+\floatname{algorithm}{Algoritmo}
+\providecommand{\algorithmautorefname}{Algoritmo}
