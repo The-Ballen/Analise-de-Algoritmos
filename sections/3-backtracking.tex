@@ -3,16 +3,185 @@
 % ----------------------------------------------------------
 % Capítulo 3 (Integrante 3)
 % ----------------------------------------------------------
+
+% palavras-chave do algoritmo em português
+\algrenewtext{If}[1]{\textbf{se} #1 \textbf{então}}
+\algrenewtext{EndIf}{\textbf{fim se}}
+\algrenewtext{For}[1]{\textbf{para} #1 \textbf{faça}}
+\algrenewtext{EndFor}{\textbf{fim para}}
+\algrenewtext{Procedure}[2]{\textbf{procedimento} \textproc{#1}(#2)}
+\algrenewtext{EndProcedure}{\textbf{fim procedimento}}
+\algrenewtext{Function}[2]{\textbf{função} \textproc{#1}(#2)}
+\algrenewtext{EndFunction}{\textbf{fim função}}
+\algrenewcommand\algorithmicreturn{\textbf{retornar}}
+\floatname{algorithm}{Algoritmo}
+
 \chapter{Algoritmos Exponenciais: Backtracking}
 
 \section{Conceito de Backtracking}
 
+O \textbf{\textit{Backtracking}} (retrocesso ou busca com retrocesso) é uma técnica de projeto de algoritmos que resolve problemas por meio da construção incremental de soluções candidatas. A cada passo, o algoritmo estende uma solução parcial com uma nova escolha. Quando percebe que a solução parcial não pode levar a uma solução válida, abandona essa escolha, volta ao passo anterior e tenta outra alternativa \cite{ziviani2007, levitin2011}.
+
+\subsection{Relação com a Busca Exaustiva}
+
+A técnica pode ser vista como um aprimoramento da \textbf{busca exaustiva} (força bruta). Enquanto a força bruta gera todas as soluções possíveis para só depois testá-las, o \textit{backtracking} verifica as restrições do problema durante a construção e descarta, o quanto antes, ramos inteiros de possibilidades que já violam alguma restrição. Esse descarte antecipado é chamado de \textbf{poda} \cite{dasgupta2009}.
+
+\subsection{Problemas Típicos de Aplicação}
+
+Por isso, o \textit{backtracking} é usado em problemas de satisfação de restrições, enumeração combinatória e otimização, tais como:
+
+\begin{itemize}
+    \item o problema das $n$ rainhas;
+    \item o preenchimento de sudoku;
+    \item a soma de subconjuntos;
+    \item a coloração de grafos;
+    \item o caminho hamiltoniano \cite{russell2013, cormen2012}.
+\end{itemize}
+
 \section{Funcionamento da Exploração do Espaço de Busca}
+
+O \textbf{espaço de busca} de um problema é o conjunto de todas as configurações que podem ser geradas pelas escolhas disponíveis. No \textit{backtracking}, esse espaço é percorrido em profundidade (\textit{depth-first}): o algoritmo avança por um caminho até encontrar uma solução completa ou uma situação inviável, e só então retrocede \cite{levitin2011}.
+
+\subsection{Etapas da Estratégia}
+
+O funcionamento segue, em geral, quatro etapas sequenciais:
+
+\begin{enumerate}
+    \item \textbf{Escolha:} Seleciona-se uma opção entre as alternativas disponíveis para a próxima decisão.
+    \item \textbf{Verificação de Viabilidade:} Testa-se se a solução parcial, com a nova escolha, ainda respeita as restrições do problema.
+    \item \textbf{Avanço ou Poda:} Se a escolha é viável, o algoritmo avança para a próxima decisão. Caso contrário, a opção é descartada (poda).
+    \item \textbf{Retrocesso:} Quando todas as alternativas de uma decisão se esgotam sem sucesso, a última escolha é desfeita e o algoritmo volta ao ponto de decisão anterior.
+\end{enumerate}
+
+\subsection{Papel da Recursão}
+
+A natureza recursiva da técnica faz com que a própria \textbf{pilha de chamadas} guarde o histórico de decisões, o que simplifica a implementação do retrocesso \cite{ziviani2007, feofiloff2009}.
 
 \section{Construção de uma Árvore de Possibilidades}
 
+A exploração do espaço de busca é representada por uma \textbf{árvore de espaço de estados} (ou árvore de possibilidades), cuja estrutura é a seguinte:
+
+\begin{itemize}
+    \item \textbf{Raiz:} representa a solução vazia, isto é, nenhuma decisão tomada;
+    \item \textbf{Nós internos:} cada nó interno representa uma solução parcial;
+    \item \textbf{Arestas:} cada aresta representa uma escolha que estende a solução parcial;
+    \item \textbf{Folhas:} representam soluções completas ou configurações sem saída (becos sem saída).
+\end{itemize}
+
+\subsection{Nós Promissores e Poda}
+
+Nessa estrutura, o algoritmo percorre a árvore em profundidade. Um nó é dito \textbf{promissor} se a solução parcial que ele representa ainda pode levar a uma solução válida, e \textbf{não promissor} caso contrário. Quando o algoritmo encontra um nó não promissor, deixa de explorar toda a subárvore abaixo dele, e é aí que está o ganho de desempenho em relação à força bruta \cite{levitin2011, dasgupta2009}.
+
+\subsection{Exemplo: o Problema das 4 Rainhas}
+
+Considere o problema das 4 rainhas, que consiste em posicionar 4 rainhas em um tabuleiro $4 \times 4$ sem que duas se ataquem. Adotando a estratégia de uma rainha por linha, o nível $k$ da árvore corresponde à escolha da coluna da rainha na linha $k$. A raiz tem até 4 filhos (colunas 1 a 4 da primeira linha). Para cada filho viável, geram-se novos filhos na linha seguinte, descartando as colunas que já estão sob ataque. Muitos ramos são podados logo nos primeiros níveis, e a árvore explorada fica bem menor que a árvore completa.
+
 \section{Aplicação do Backtracking em um Problema Computacional}
+
+Como exemplo, adota-se o \textbf{problema das $n$ rainhas}: dado um tabuleiro de xadrez $n \times n$, posicionar $n$ rainhas de modo que nenhuma ameace outra, ou seja, sem que duas rainhas ocupem a mesma linha, coluna ou diagonal \cite{levitin2011, russell2013}.
+
+\subsection{Modelagem do Problema}
+
+A modelagem computacional é composta pelos seguintes elementos:
+
+\begin{itemize}
+    \item \textbf{Representação:} Um vetor $col[1..n]$, em que $col[i]$ indica a coluna da rainha posicionada na linha $i$. Essa representação já impede, por construção, duas rainhas na mesma linha.
+    \item \textbf{Restrição:} Uma rainha na linha $k$, coluna $c$, é compatível com uma rainha anterior na linha $i$ se as duas condições a seguir forem satisfeitas: colunas distintas ($col[i] \neq c$) e diagonais distintas ($|col[i] - c| \neq |i - k|$).
+    \item \textbf{Solução:} Vetor completo com $n$ posições válidas.
+\end{itemize}
+
+\subsection{Quantidade de Soluções}
+
+Para $n = 8$, o problema possui \textbf{92 soluções distintas}. Elas se reduzem a \textbf{12} quando se consideram equivalentes as soluções obtidas por rotações e reflexões do tabuleiro \cite{levitin2011}.
 
 \section{Apresentação de Pseudocódigo Simplificado}
 
+O \autoref{alg:nrainhas} apresenta uma versão simplificada do problema das $n$ rainhas resolvido por \textit{backtracking}.
+
+\begin{algorithm}[htb]
+\caption{\label{alg:nrainhas}Problema das $n$ rainhas por \textit{backtracking}.}
+\begin{algorithmic}[1]
+\Procedure{NRainhas}{$n$}
+    \State $col \gets$ vetor de tamanho $n$
+    \State \Call{Posicionar}{$1$}
+\EndProcedure
+\Statex
+
+\Procedure{Posicionar}{$k$}
+    \If{$k > n$}
+        \State \textproc{Imprimir}($col$) \Comment{solução completa encontrada}
+        \State \Return
+    \EndIf
+    \For{$c \gets 1$ \textbf{até} $n$}
+        \If{\Call{Seguro}{$k, c$}} \Comment{verificação de viabilidade (poda)}
+            \State $col[k] \gets c$ \Comment{escolha}
+            \State \Call{Posicionar}{$k + 1$} \Comment{avanço (chamada recursiva)}
+            \Statex \hspace{\algorithmicindent}\hspace{\algorithmicindent}\textit{// ao retornar, o laço tenta a próxima coluna (retrocesso)}
+        \EndIf
+    \EndFor
+\EndProcedure
+\Statex
+
+\Function{Seguro}{$k, c$}
+    \For{$i \gets 1$ \textbf{até} $k - 1$}
+        \If{$col[i] = c$ \textbf{ou} $|col[i] - c| = |i - k|$}
+            \State \Return \textbf{falso}
+        \EndIf
+    \EndFor
+    \State \Return \textbf{verdadeiro}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Correspondência com o Esquema Geral}
+
+O procedimento \textproc{Posicionar} implementa o esquema geral do \textit{backtracking}. O teste \textproc{Seguro} realiza a \textbf{poda}, e o retorno da chamada recursiva, seguido da próxima iteração do laço, realiza o \textbf{retrocesso} \cite{ziviani2007, feofiloff2009}.
+
 \section{Discussão sobre o Custo Computacional e Crescimento Exponencial}
+
+Apesar da poda, o \textit{backtracking} continua sendo, no pior caso, um algoritmo de \textbf{custo exponencial} (ou fatorial). Isso ocorre porque a poda reduz o número de nós visitados em muitos casos práticos, mas não elimina a possibilidade de que grande parte do espaço de busca precise ser percorrida \cite{cormen2012, toscani2012}.
+
+\subsection{Tamanho do Espaço de Busca}
+
+O tamanho do espaço de busca depende da estrutura do problema, conforme resumido na \autoref{tab:espaco_busca}.
+
+\begin{table}[htb]
+\centering
+\caption{\label{tab:espaco_busca}Crescimento do espaço de busca conforme a estrutura do problema.}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|c|c|}
+\hline
+\rowcolor{gray!20}
+\textbf{Estrutura} & \textbf{Tamanho do espaço} & \textbf{Exemplo} \\ \hline
+Subconjuntos & $O(2^n)$ & $2^{30} = 1.073.741.824$ \\ \hline
+Permutações & $O(n!)$ & $15! \approx 1{,}3 \times 10^{12}$ \\ \hline
+$n$ rainhas (sem restrições) & $n^n$ & $8^8 = 16.777.216$ \\ \hline
+$n$ rainhas (uma por coluna) & $n!$ & $8! = 40.320$ \\ \hline
+\end{tabular}
+\end{table}
+
+Detalhando cada caso:
+
+\begin{itemize}
+    \item \textbf{Subconjuntos} (soma de subconjuntos, mochila): Cada elemento é incluído ou não, o que gera uma árvore binária com $2^n$ folhas, ou seja, $O(2^n)$. Para $n = 30$, isso resulta em mais de 1 bilhão de configurações:
+    \begin{equation}
+        2^{30} = 1.073.741.824
+    \end{equation}
+    \item \textbf{Permutações} (caixeiro-viajante, caminho hamiltoniano): O número de ordenações possíveis é $n!$, ou seja, $O(n!)$, o que cresce ainda mais rápido que $2^n$. Para $n = 15$, tem-se:
+    \begin{equation}
+        15! \approx 1{,}3 \times 10^{12}
+    \end{equation}
+    \item \textbf{$n$ rainhas:} Sem restrições, haveria $n^n$ posicionamentos possíveis, pois cada uma das $n$ linhas admite $n$ colunas. Para $n = 8$, são $8^8 = 16.777.216$. Restringindo uma rainha por coluna, restam $n! = 40.320$ permutações. A poda por diagonais reduz ainda mais a quantidade de nós efetivamente visitados.
+\end{itemize}
+
+\subsection{Fatores que Influenciam a Eficiência}
+
+A eficiência do \textit{backtracking} depende de fatores como a qualidade da função de viabilidade, a ordem em que as alternativas são testadas e o momento em que a poda é aplicada (quanto mais cedo, melhor). Heurísticas de ordenação das escolhas e a verificação antecipada de restrições podem reduzir o tempo de execução em várias ordens de grandeza, embora sem alterar a classificação de complexidade no pior caso \cite{russell2013, levitin2011}.
+
+\subsection{Uso de Memória}
+
+Em relação ao uso de memória, o \textit{backtracking} é bastante econômico, pois armazena apenas o caminho corrente da raiz até o nó atual. Seu consumo é, em geral, \textbf{polinomial} (linear na profundidade da árvore), o que o torna vantajoso diante de outras estratégias de busca que guardam grande quantidade de estados \cite{russell2013}.
+
+\subsection{Perspectiva da Teoria da Complexidade}
+
+Do ponto de vista da teoria da complexidade, muitos dos problemas resolvidos por \textit{backtracking} pertencem à classe \textbf{NP-difícil} ou \textbf{NP-completa}, para os quais não se conhece algoritmo de tempo polinomial. Por isso, o \textit{backtracking} costuma ser adequado a instâncias de tamanho pequeno ou moderado. Para instâncias maiores, recorre-se a heurísticas, algoritmos de aproximação ou técnicas como \textit{branch and bound} e programação dinâmica \cite{kleinberg2008, toscani2012}.

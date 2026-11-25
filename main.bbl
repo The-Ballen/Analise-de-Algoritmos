@@ -1,0 +1,187 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Barbosa 2022]{barbosa2022}
+\abntrefinfo{Barbosa}{BARBOSA}{2022}
+{BARBOSA, M. A.~L. \emph{Ciclos Hamiltonianos e o Problema do Caixeiro Viajante
+  (Notas de Aula de Grafos)}. 2022. Departamento de Informática --
+  Universidade Estadual de Maringá (DIN-UEM).
+Dispon{\'\i}vel em:
+  \url{https://malbarbo.pro.br/arquivos/2022/6898/12-ciclos-hamiltonianos-e-o-problema-do-caixeiro-viajante.pdf}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Cormen et al. 2012]{cormen2012}
+\abntrefinfo{Cormen et al.}{CORMEN et al.}{2012}
+{CORMEN, T.~H. et al. \emph{Algoritmos: Teoria e Prática}. 3. ed. Rio de
+  Janeiro: Elsevier, 2012. (Capítulo 34: NP-Completude, Capítulo 35:
+  Algoritmos de Aproximação e Seção 35.2: O Problema do
+  Caixeiro-Viajante).}
+
+\bibitem[Dasgupta, Papadimitriou e Vazirani 2009]{dasgupta2009}
+\abntrefinfo{Dasgupta, Papadimitriou e Vazirani}{DASGUPTA; PAPADIMITRIOU;
+  VAZIRANI}{2009}
+{DASGUPTA, S.; PAPADIMITRIOU, C.; VAZIRANI, U. \emph{Algoritmos}. São Paulo:
+  McGraw-Hill, 2009.}
+
+\bibitem[Feofiloff 2009]{feofiloff2009}
+\abntrefinfo{Feofiloff}{FEOFILOFF}{2009}
+{FEOFILOFF, P. \emph{Algoritmos em linguagem C}. Rio de Janeiro: Elsevier,
+  2009.}
+
+\bibitem[Feofiloff 2018]{feofiloff_guloso}
+\abntrefinfo{Feofiloff}{FEOFILOFF}{2018a}
+{FEOFILOFF, P. \emph{Algoritmos Gulosos}. 2018. Projeto de Algoritmos em C --
+  Instituto de Matemática e Estatística da Universidade de São Paulo
+  (IME-USP).
+Dispon{\'\i}vel em:
+  \url{https://www.ime.usp.br/~pf/analise\_de\_algoritmos/aulas/guloso.html}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Feofiloff 2018]{feofiloff_caixeiro}
+\abntrefinfo{Feofiloff}{FEOFILOFF}{2018b}
+{FEOFILOFF, P. \emph{O Problema do Caixeiro Viajante}. 2018. Projeto de
+  Algoritmos em C -- Instituto de Matemática e Estatística da Universidade de
+  São Paulo (IME-USP).
+Dispon{\'\i}vel em:
+  \url{https://www.ime.usp.br/~pf/analise\_de\_algoritmos/aulas/caixeiro.html}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Feofiloff, Kohayakawa e Wakabayashi 2011]{feofiloff2011}
+\abntrefinfo{Feofiloff, Kohayakawa e Wakabayashi}{FEOFILOFF; KOHAYAKAWA;
+  WAKABAYASHI}{2011}
+{FEOFILOFF, P.; KOHAYAKAWA, Y.; WAKABAYASHI, Y. \emph{Uma Introdução Sucinta
+  à Teoria dos Grafos}. 2011. Instituto de Matemática e Estatística da
+  Universidade de São Paulo (IME-USP).
+Dispon{\'\i}vel em:
+  \url{https://www.ime.usp.br/~pf/teoriadosgrafos/texto/TeoriaDosGrafos.pdf}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Fernandes 2021]{fernandes2021}
+\abntrefinfo{Fernandes}{FERNANDES}{2021}
+{FERNANDES, C.~G. \emph{MAC5758 / MAC0466 -- Algoritmos de Aproximação}.
+  2021. Instituto de Matemática e Estatística da Universidade de São Paulo
+  (IME-USP).
+Dispon{\'\i}vel em: \url{https://www.ime.usp.br/~cris/aprox/}. Acesso em: 10
+  nov. 2026.}
+
+\bibitem[Goldbarg e Luna 2005]{goldbarg2005}
+\abntrefinfo{Goldbarg e Luna}{GOLDBARG; LUNA}{2005}
+{GOLDBARG, M.~C.; LUNA, H. P.~L. \emph{Otimização Combinatória e
+  Programação Linear: Modelos e Algoritmos}. 2. ed. Rio de Janeiro: Elsevier,
+  2005. (Capítulo sobre Heurísticas e Meta-heurísticas).}
+
+\bibitem[How are approximation algorithms and heuristic search related?
+  2026]{quora_approx_heuristic}
+\abntrefinfo{How\ldots}{HOW\ldots}{2026}
+{HOW are approximation algorithms and heuristic search related? 2026. Quora.
+Dispon{\'\i}vel em:
+  \url{https://www.quora.com/How-are-approximation-algorithms-and-heuristic-search-related}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Kleinberg e Tardos 2008]{kleinberg2008}
+\abntrefinfo{Kleinberg e Tardos}{KLEINBERG; TARDOS}{2008}
+{KLEINBERG, J.; TARDOS, {\'E}. \emph{Projeto de algoritmos}. Porto Alegre:
+  Bookman, 2008.}
+
+\bibitem[Levitin 2011]{levitin2011}
+\abntrefinfo{Levitin}{LEVITIN}{2011}
+{LEVITIN, A. \emph{Introdução ao projeto e análise de algoritmos}. 2. ed.
+  São Paulo: Pearson Addison Wesley, 2011.}
+
+\bibitem[Miyazawa 2016]{miyazawa_intro}
+\abntrefinfo{Miyazawa}{MIYAZAWA}{2016}
+{MIYAZAWA, F.~K. \emph{Introdução à Otimização Combinatória}. 2016.
+  Instituto de Computação da Universidade Estadual de Campinas (IC-Unicamp).
+Dispon{\'\i}vel em:
+  \url{https://www.ic.unicamp.br/~fkm/lectures/intro-otimizacao.pdf}. Acesso
+  em: 10 nov. 2026.}
+
+\bibitem[Miyazawa 2020]{miyazawa_aprox}
+\abntrefinfo{Miyazawa}{MIYAZAWA}{2020}
+{MIYAZAWA, F.~K. \emph{Projetos em Algoritmos de Aproximação}. 2020.
+  Instituto de Computação da Universidade Estadual de Campinas (IC-Unicamp).
+Dispon{\'\i}vel em:
+  \url{https://www.ic.unicamp.br/~fkm/problems/algaprox.html}. Acesso em: 10
+  nov. 2026.}
+
+\bibitem[Nemhauser, Wolsey e Fisher 1978]{nemhauser1978}
+\abntrefinfo{Nemhauser, Wolsey e Fisher}{NEMHAUSER; WOLSEY; FISHER}{1978}
+{NEMHAUSER, G.; WOLSEY, L.; FISHER, M. An analysis of approximations for
+  maximizing submodular set functions—i.
+\emph{Mathematical Programming}, v.~14, p. 265--294, 12 1978.}
+
+\bibitem[Parpinelli 2024]{parpinelli_udesc}
+\abntrefinfo{Parpinelli}{PARPINELLI}{2024}
+{PARPINELLI, R.~S. \emph{Configuração Automática de Algoritmos Heurísticos
+  de Otimização}. 2024. Centro de Educação Superior do Alto Vale do Itajaí
+  -- Universidade do Estado de Santa Catarina (UDESC).
+Dispon{\'\i}vel em:
+  \url{https://www.udesc.br/arquivos/ceavi/id\_cpmenu/5818/Configura\_\_o\_autom\_tica\_de\_algoritmos\_heur\_sticos\_de\_otimiza\_\_o\_17315186624122\_5818.pdf}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Russell e Norvig 2013]{russell2013}
+\abntrefinfo{Russell e Norvig}{RUSSELL; NORVIG}{2013}
+{RUSSELL, S.; NORVIG, P. \emph{Inteligência Artificial}. Rio de Janeiro:
+  Elsevier, 2013.
+(Capítulo 3, Seção 3.5: Estratégias de Busca Informada / Heurística e
+  Capítulo 4: Busca Local em Espaços de Estados).}
+
+\bibitem[ScienceDirect Topics 2026]{sciencedirect_heuristic}
+\abntrefinfo{ScienceDirect Topics}{SCIENCEDIRECT TOPICS}{2026}
+{SCIENCEDIRECT TOPICS. \emph{Heuristic Algorithm -- Computer Science}. 2026.
+  Elsevier.
+Dispon{\'\i}vel em:
+  \url{https://www.sciencedirect.com/topics/computer-science/heuristic-algorithm}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Souza 2021]{souza_ufop}
+\abntrefinfo{Souza}{SOUZA}{2021}
+{SOUZA, M. J.~F. \emph{Inteligência Computacional para Otimização (Notas de
+  Aula -- Técnicas Meta-heurísticas para Otimização Combinatória)}. 2021.
+  Departamento de Computação -- Universidade Federal de Ouro Preto
+  (DECOM-UFOP).
+Dispon{\'\i}vel em:
+  \url{http://www.decom.ufop.br/marcone/Disciplinas/InteligenciaComputacional/InteligenciaComputacional.htm}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[TechVidvan 2026]{techvidvan_greedy}
+\abntrefinfo{TechVidvan}{TECHVIDVAN}{2026}
+{TECHVIDVAN. \emph{Greedy Algorithm -- Introduction, Methods and Examples}.
+  2026.
+Dispon{\'\i}vel em: \url{https://techvidvan.com/tutorials/greedy-algorithm/}.
+  Acesso em: 10 nov. 2026.}
+
+\bibitem[Toscani e Veloso 2012]{toscani2012}
+\abntrefinfo{Toscani e Veloso}{TOSCANI; VELOSO}{2012}
+{TOSCANI, L.~V.; VELOSO, P. A.~S. \emph{Complexidade de algoritmos}. 3. ed.
+  Porto Alegre: Bookman, 2012.}
+
+\bibitem[Wikipédia 2026]{wikipedia_exact_alg}
+\abntrefinfo{Wikipédia}{WIKIPéDIA}{2026a}
+{WIKIPéDIA. \emph{Exact algorithm}. 2026. Wikimedia Foundation.
+Dispon{\'\i}vel em: \url{https://en.wikipedia.org/wiki/Exact\_algorithm}.
+  Acesso em: 17 nov. 2026.}
+
+\bibitem[Wikipédia 2026]{wikipedia_maxcov}
+\abntrefinfo{Wikipédia}{WIKIPéDIA}{2026b}
+{WIKIPéDIA. \emph{Maximum Coverage Problem}. 2026. Wikimedia Foundation.
+Dispon{\'\i}vel em:
+  \url{https://en.wikipedia.org/wiki/Maximum\_coverage\_problem}. Acesso em: 10
+  nov. 2026.}
+
+\bibitem[Ziviani 2007]{ziviani2007}
+\abntrefinfo{Ziviani}{ZIVIANI}{2007}
+{ZIVIANI, N. \emph{Projeto de algoritmos: com implementações em Java e C++}.
+  São Paulo: Thomson Learning, 2007.}
+
+\bibitem[Ziviani 2011]{ziviani2011}
+\abntrefinfo{Ziviani}{ZIVIANI}{2011}
+{ZIVIANI, N. \emph{Projeto de Algoritmos com Implementações em Pascal e C}.
+  3. ed. São Paulo: Cengage Learning, 2011. (Capítulo sobre Algoritmos
+  Aproximativos e Problemas NP-Completos).}
+
+\end{thebibliography}
